@@ -11,10 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@deepgram/sdk": "^3.7.0",
     "axios": "^1.7.7",
     "fs": "^0.0.1-security"
   },
   "devDependencies": {
-    "dotenv": "^16.4.5"
+    "@types/node": "^22.5.5",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
   }
 }
