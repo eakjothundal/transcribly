@@ -1,7 +1,24 @@
 import OpenAI from "openai";
-import { eakjot as profile } from "./profiles";
+import { eakjot as profile } from "../../../../profiles"; // TODO: find a better place for profiles
 
-export const summarize = async (transcript: string) => {
+import deepgram from "@deepgram/sdk";
+const { createClient } = deepgram;
+import fs from "fs";
+
+export const summarizeAndTranscribe = async () => {
+  const transcript = await transcribe();
+  console.log("Transcript:   ", transcript);
+
+  if (transcript) {
+    const summary = await summarize(transcript);
+    console.log("Summary:   ", summary);
+    return;
+  }
+
+  console.error("No transcript");
+};
+
+const summarize = async (transcript: string) => {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
     project: process.env.OPENAI_PROJECT_KEY,
@@ -55,4 +72,26 @@ export const summarize = async (transcript: string) => {
   const summary = completion.choices[0].message.content;
 
   return summary;
+};
+
+const transcribe = async () => {
+  // STEP 1: Create a Deepgram client using the API key
+  const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
+
+  // STEP 2: Call the transcribeFile method with the audio payload and options
+  const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
+    // path to the audio file
+    fs.readFileSync("testData/section.m4a"),
+    // STEP 3: Configure Deepgram options for audio analysis
+    {
+      model: "nova-2",
+      smart_format: true,
+    }
+  );
+
+  if (error) throw error;
+  // STEP 4: Print the results
+  const transcript = result.results.channels[0].alternatives[0].transcript;
+
+  if (!error) return transcript;
 };
