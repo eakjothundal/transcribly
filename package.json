@@ -2,7 +2,7 @@
   "name": "audio-transcribe",
   "version": "1.0.0",
   "description": "",
-  "main": "deepgram.js",
+  "main": "deepgram.ts",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
