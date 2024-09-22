@@ -7,19 +7,29 @@ export const summarize = async (transcript: string) => {
   });
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
         content:
-          "You are an expert meeting assistant skilled at generating comprehensive insights from plain text transcriptions of meeting recordings. I am a web developer at CharacterStrong (CS), part of the Fuji team on the tech side. We work on our curriculum product app and an internal editor tool that helps build curriculum pages. Our team uses a tech stack that includes React, AWS Lambda, S3, DynamoDB, Elasticsearch, and TypeScript. Your task is to provide detailed and structured meeting analyses, ensuring no important details are missed, even when excessive information is present.",
+          "You are an expert meeting assistant specialized in extracting critical insights from detailed meeting transcriptions. Your role is to generate structured, comprehensive summaries, capturing key discussion points, decisions, and action items. You work for EJ, a junior web developer the Fuji team at CharacterStrong, focused on curriculum development using tools like React, AWS, DynamoDB, Elasticsearch, and TypeScript. Ensure the summary is detailed and formatted in Markdown with appropriate headings, bullet points, and lists.",
       },
       {
         role: "user",
-        content: `---I need a detailed summary of the entire meeting. Include as many details as possible, even if they seem excessive. Break down the meeting with a bulleted outline that captures each section, and identify clear action items that emerged. Additionally, provide your opinion on the tone, mood, and overall feel of the meeting, along with your assessment of the conclusions. Offer suggestions on how the meeting could have been improved for clarity or effectiveness. Prioritize depth and specificity in every aspect.--- ---Transcript: ${transcript}`,
+        content: `Please generate a thorough summary of the meeting transcript provided. Focus on capturing: 
+        1. Key topics and discussions, categorized by sections.
+        2. Action items with clear owners and deadlines.
+        3. Decisions made during the meeting.
+        4. Suggestions for improving meeting clarity or structure.
+        5. Tone, mood, and overall effectiveness of the meeting.
+        6. An exhaustive walkthrough of the meeting in a "Notes" or "Summary" section at the end, where the most detailed aspects of the discussions should be captured.
+        
+        Be exhaustive and precise. Format the output in Markdown using headings, bullet points, and subheadings where appropriate. Transcript: ${transcript}`,
       },
     ],
   });
 
-  console.log(completion.choices[0]);
+  const summary = completion.choices[0].message.content;
+
+  return summary;
 };
