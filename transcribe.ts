@@ -1,18 +1,5 @@
-// COMMAND TO RUN
-// npx tsx deepgram.tsx audioFile.m4a
-
-// TODO: move to app.ts eventually
-import dotenv from "dotenv";
-dotenv.config();
-
 import deepgram from "@deepgram/sdk";
 import fs from "fs";
-
-import { summarize } from "./summarize";
-
-// Get the file path
-const audioFile = process.argv[2];
-console.log(audioFile);
 
 const { createClient } = deepgram;
 
@@ -23,7 +10,7 @@ export const transcribe = async () => {
   // STEP 2: Call the transcribeFile method with the audio payload and options
   const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
     // path to the audio file
-    fs.readFileSync("testData/test.m4a"),
+    fs.readFileSync("testData/settingEvent_46min.m4a"),
     // STEP 3: Configure Deepgram options for audio analysis
     {
       model: "nova-2",
