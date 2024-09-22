@@ -13,7 +13,8 @@ const audioFile = process.argv[2];
 console.log(audioFile);
 
 const { createClient } = deepgram;
-const transcribeFile = async () => {
+
+export const transcribeFile = async () => {
   // STEP 1: Create a Deepgram client using the API key
   const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
@@ -30,7 +31,10 @@ const transcribeFile = async () => {
 
   if (error) throw error;
   // STEP 4: Print the results
-  if (!error) console.dir(result.results, { depth: null });
+  const transcript = result.results.channels[0].alternatives[0].transcript;
+  console.log(transcript); // TODO: Remove log
+
+  if (!error) return transcript;
 };
 
 transcribeFile();
