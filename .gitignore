@@ -1,3 +1,9 @@
+# User Profiles
+profiles/*
+
+# Test Data
+testData/*
+
 # Logs
 logs
 *.log

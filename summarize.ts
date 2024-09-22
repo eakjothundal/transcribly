@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { eakjot as profile } from "./profiles";
 
 export const summarize = async (transcript: string) => {
   const openai = new OpenAI({
@@ -13,8 +14,10 @@ export const summarize = async (transcript: string) => {
         role: "system",
         content: `
           You are an expert meeting assistant specialized in creating clear, comprehensive, and actionable meeting summaries.
-          You work for EJ, a junior web developer on the Fuji team at CharacterStrong, focused on curriculum development using tools like React, AWS, DynamoDB, Elasticsearch, and TypeScript. If the transcipt mentions names like DJ or CJ or something, its referring to EJ.
-          Your task is to extract detailed insights from meeting transcriptions, making sure to prioritize readability and key actionable items. 
+          
+          Your boss: ${profile}
+
+          Your task is to extract detailed insights from meeting transcriptions, making sure to prioritize readability and key actionable items.
           The summary must be structured, visually clear, and use Markdown-friendly formatting including colors, whitespace, headings, and lists for easy digestion.
 
           The structure should be as follows:

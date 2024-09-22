@@ -11,13 +11,13 @@ dotenv.config();
 
 const app = async () => {
   // Transcription
-  // console.log("-------- Transcribing --------");
-  // const transcript = await transcribe();
+  console.log("-------- Transcribing --------");
+  const transcript = await transcribe();
 
   // Summarization
   console.log("-------- Summarizing --------");
-  if (tempTranscript) {
-    const summary = await summarize(tempTranscript);
+  if (transcript) {
+    const summary = await summarize(transcript);
     console.log(summary);
   }
 };
