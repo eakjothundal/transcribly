@@ -118,21 +118,6 @@ By default, the application transcribes the audio file located at `testData/sect
    fs.readFileSync("testData/your-audio-file.m4a");
    ```
 
-## Project Structure
-
-```
-├── app.ts               # Main application file
-├── transcribe.ts        # Handles audio transcription using Deepgram
-├── summarize.ts         # Handles text summarization using OpenAI
-├── testData/            # Directory for test audio files and data
-│   ├── section.m4a
-│   └── testData.ts
-├── profiles.ts          # Profiles used for summarization context
-├── package.json         # Node.js project manifest
-├── tsconfig.json        # TypeScript configuration
-└── .env                 # Environment variables (not committed to version control)
-```
-
 ## Contributing
 
 Contributions are welcome! Please follow these steps to contribute:
