@@ -1,8 +1,8 @@
-# User Profiles
-profiles/*
+# Profiles
+backend/profiles/*
 
 # Test Data
-testData/*
+backend/testData/*
 
 # Logs
 logs
