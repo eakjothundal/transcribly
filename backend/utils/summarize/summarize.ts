@@ -27,7 +27,7 @@ const summarize = async (transcript: string) => {
   });
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4o-mini", // TODO: upgrade to gpt-4o when more stable
     messages: [
       {
         role: "system",

@@ -15,7 +15,6 @@ function App() {
     <div>
       <Button onClick={justDoIt}>Just Do It</Button>
 
-      <h1>Message from backend:</h1>
       {data ? <Markdown>{data}</Markdown> : <p>Loading...</p>}
     </div>
   );
