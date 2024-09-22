@@ -1,0 +1,1 @@
+export { eakjot } from "./eakjot";

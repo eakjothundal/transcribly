@@ -1,10 +1,19 @@
-import { Button } from "./components/ui/button";
-// import { summarizeAndTranscribe } from "./utils/summarize/summarize";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch(`${process.env.API}/api`)
+      .then((res) => res.json()) // Parse JSON
+      .then((data) => setData(data.message)); // Set the message as data
+  }, []);
+
   return (
-    // FIXME: shadcn component styles not working - after we figure out backend things
-    <Button variant="default">Lets Go!</Button>
+    <div>
+      <h1>Message from backend:</h1>
+      {data ? <p>{data}</p> : <p>Loading...</p>}
+    </div>
   );
 }
 
