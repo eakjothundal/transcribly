@@ -2,7 +2,7 @@
   "name": "audio-transcribe",
   "version": "1.0.0",
   "description": "",
-  "main": "deepgram.ts",
+  "main": "transcribe.ts",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +13,8 @@
   "dependencies": {
     "@deepgram/sdk": "^3.7.0",
     "axios": "^1.7.7",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "openai": "^4.63.0"
   },
   "devDependencies": {
     "@types/node": "^22.5.5",
