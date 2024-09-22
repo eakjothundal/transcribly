@@ -29,6 +29,7 @@ const summarize = async (transcript: string) => {
     messages: [
       {
         role: "system",
+        // TODO: move out content to make summarize function reusable
         content: `
           You are an expert meeting assistant specialized in creating clear, comprehensive, and actionable meeting summaries.
           
@@ -61,6 +62,7 @@ const summarize = async (transcript: string) => {
       },
       {
         role: "user",
+        // TODO: move out content to make summarize function reusable
         content: `
           Please summarize the meeting based on the provided transcript using the structured format outlined. 
           Ensure all key points, decisions, action items, and suggestions are captured clearly and exhaustively.
