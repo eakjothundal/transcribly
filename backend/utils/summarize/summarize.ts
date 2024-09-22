@@ -1,18 +1,20 @@
 import OpenAI from "openai";
-import { eakjot as profile } from "../../../../profiles"; // TODO: find a better place for profiles
+import { eakjot as profile } from "../../profiles"; // TODO: find a better place for profiles
+
+import { settingEventsTranscript as tempTranscript } from "../../testData";
 
 import deepgram from "@deepgram/sdk";
 const { createClient } = deepgram;
 import fs from "fs";
 
 export const summarizeAndTranscribe = async () => {
-  const transcript = await transcribe();
-  console.log("Transcript:   ", transcript);
+  // const transcript = await transcribe();
+  // console.log("Transcript:   ", transcript);
 
-  if (transcript) {
-    const summary = await summarize(transcript);
+  if (tempTranscript) {
+    const summary = await summarize(tempTranscript);
     console.log("Summary:   ", summary);
-    return;
+    return summary;
   }
 
   console.error("No transcript");
@@ -78,12 +80,15 @@ const summarize = async (transcript: string) => {
 
 const transcribe = async () => {
   // STEP 1: Create a Deepgram client using the API key
+  console.log(process.env.DEEPGRAM_API_KEY);
   const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
   // STEP 2: Call the transcribeFile method with the audio payload and options
   const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
     // path to the audio file
-    fs.readFileSync("testData/section.m4a"),
+    fs.readFileSync(
+      "/Users/eakjothundal/Documents/coding/personalProjects/node/audio-transcribe/backend/testData/section.m4a"
+    ),
     // STEP 3: Configure Deepgram options for audio analysis
     {
       model: "nova-2",
