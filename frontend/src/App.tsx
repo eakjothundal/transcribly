@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "./components/ui/button";
 import Markdown from "react-markdown";
 
 function App() {
@@ -13,7 +12,7 @@ function App() {
 
   return (
     <div>
-      <Button onClick={justDoIt}>Just Do It</Button>
+      <button onClick={justDoIt}>Just Do It</button>
 
       {data ? <Markdown>{data}</Markdown> : <p>Loading...</p>}
     </div>
