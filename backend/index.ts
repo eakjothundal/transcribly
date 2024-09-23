@@ -3,13 +3,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
 
-import { uploadOne } from "./utils/firebase/storage";
+import { upload } from "./utils/firebase/storage";
+import { summarizeAndTranscribe } from "./utils/summarize";
 
 dotenv.config();
 const app = express();
 
 // Set up Multer for file handling
-const upload = multer({ dest: "uploads/" }); // 'uploads/' is the folder where files will be temporarily stored
+const multerUpload = multer({ dest: "uploads/" }); // 'uploads/' is the folder where files will be temporarily stored
 
 // Allow CORS from frontend
 app.use(
@@ -18,18 +19,17 @@ app.use(
   })
 );
 
-app.post("/api/uploadOne", upload.single("file"), async (req, res) => {
+app.post("/api/summarize", multerUpload.single("file"), async (req, res) => {
   const file = req.file as Express.Multer.File;
 
   if (!file) {
     return res.status(400).send("No file uploaded.");
   }
 
-  // Upload file
-  uploadOne(file);
+  // Transcribe
+  const summary = await summarizeAndTranscribe(file.path);
 
-  console.log("File received:", file);
-  res.json({ message: "File received", file });
+  res.json({ message: "File received", summary });
 });
 
 // Route for /api (general route should come after)

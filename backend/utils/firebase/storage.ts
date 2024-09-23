@@ -17,9 +17,9 @@ admin.initializeApp({
 const bucket = getStorage().bucket();
 
 // Function to upload local file to Firebase Storage
-export const uploadOne = async (file: Express.Multer.File) => {
+export const upload = async (file: Express.Multer.File) => {
   try {
-    const destination = `uploads/${file.filename}`; // Destination path in Firebase Storage
+    const destination = `uploads/${file.originalname}`; // Destination path in Firebase Storage
 
     // Upload the local file from the file system to Firebase Storage
     await bucket.upload(file.path, {

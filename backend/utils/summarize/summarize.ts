@@ -7,9 +7,9 @@ import deepgram from "@deepgram/sdk";
 const { createClient } = deepgram;
 import fs from "fs";
 
-export const summarizeAndTranscribe = async () => {
-  // const transcript = await transcribe();
-  // console.log("Transcript:   ", transcript);
+export const summarizeAndTranscribe = async (localFilePath: string) => {
+  const transcript = await transcribe(localFilePath);
+  console.log("Transcript:   ", transcript);
 
   if (tempTranscript) {
     const summary = await summarize(tempTranscript);
@@ -78,7 +78,7 @@ const summarize = async (transcript: string) => {
   return summary;
 };
 
-const transcribe = async () => {
+const transcribe = async (localFilePath: string) => {
   // STEP 1: Create a Deepgram client using the API key
   console.log(process.env.DEEPGRAM_API_KEY);
   const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
@@ -86,9 +86,7 @@ const transcribe = async () => {
   // STEP 2: Call the transcribeFile method with the audio payload and options
   const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
     // path to the audio file
-    fs.readFileSync(
-      "/Users/eakjothundal/Documents/coding/personalProjects/node/audio-transcribe/backend/testData/section.m4a"
-    ),
+    fs.readFileSync(localFilePath),
     // STEP 3: Configure Deepgram options for audio analysis
     {
       model: "nova-2",

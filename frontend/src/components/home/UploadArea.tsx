@@ -8,7 +8,7 @@ export function UploadArea() {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch("http://localhost:3055/api/uploadOne", {
+    fetch("http://localhost:3055/api/summarize", {
       method: "POST",
       body: formData,
     });
