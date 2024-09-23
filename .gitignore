@@ -1,3 +1,10 @@
+# Temp Uploads
+backend/uploads*
+backend/utils/firebase/config.ts
+
+# Configs
+backend/utils/firebase/config.ts
+
 # Profiles
 backend/profiles/*
 

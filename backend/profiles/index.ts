@@ -1,1 +1,0 @@
-export { eakjot } from "./eakjot";

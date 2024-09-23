@@ -1,1 +1,0 @@
-export const eakjot = `You work for EJ, a junior web developer on the Fuji team at CharacterStrong, focused on curriculum development using tools like React, AWS, DynamoDB, Elasticsearch, and TypeScript. If the transcipt mentions names like DJ or CJ or something, its referring to EJ.`;

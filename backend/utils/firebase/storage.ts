@@ -1,26 +1,39 @@
-import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import admin from "firebase-admin";
+import { ServiceAccount } from "firebase-admin";
+import { getStorage } from "firebase-admin/storage";
 import fs from "fs";
 
-import { firebaseConfig } from "./config";
+import { firebaseAdminServiceAccount } from "./config";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase Admin SDK
+admin.initializeApp({
+  credential: admin.credential.cert(
+    firebaseAdminServiceAccount as ServiceAccount
+  ),
+  storageBucket: "audio-transcribe-ee80a.appspot.com",
+});
 
-// Initalize and get storage object
-const storage = getStorage(app);
-
-// Create a reference to 'test.m4a'
-const testRef = ref(storage, "test.m4a");
+// Initialize Firebase Storage
+const bucket = getStorage().bucket();
 
 // Function to upload local file to Firebase Storage
-export const upload = async (file: File | Blob) => {
+export const uploadOne = async (file: Express.Multer.File) => {
   try {
-    // Upload the buffer to Firebase Storage
-    await uploadBytes(testRef, file);
+    const destination = `uploads/${file.filename}`; // Destination path in Firebase Storage
 
-    console.log("File uploaded successfully");
+    // Upload the local file from the file system to Firebase Storage
+    await bucket.upload(file.path, {
+      destination,
+      metadata: {
+        contentType: file.mimetype, // Set the correct MIME type
+      },
+    });
+
+    console.log(`File uploaded successfully to Firebase: ${destination}`);
   } catch (error) {
     console.error("Error uploading file:", error);
+  } finally {
+    // Optionally delete the file from the local server
+    fs.unlinkSync(file.path);
   }
 };

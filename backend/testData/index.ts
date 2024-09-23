@@ -1,1 +1,0 @@
-export { settingEventsTranscript } from "./transcripts";
