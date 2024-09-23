@@ -1,7 +1,16 @@
+.home {
+  margin-top: 3rem;
+}
+
 .uploadArea {
   width: 50%;
 }
 
 .dropzoneContent {
-  height: 100px;
+  height: 6.25rem;
+}
+
+.markdownViewer {
+  width: 70%;
+  margin-top: 2.25rem;
 }

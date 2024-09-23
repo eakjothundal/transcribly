@@ -9,7 +9,7 @@ import fs from "fs";
 
 export const summarizeAndTranscribe = async (localFilePath: string) => {
   // const transcript = await transcribe(localFilePath);
-  // console.log("Transcript:   ", transcript);
+  // console.log("Transcript:   ", transcript); // TODO: uncomment after testing
 
   if (tempTranscript) {
     const summary = await summarize(tempTranscript);
