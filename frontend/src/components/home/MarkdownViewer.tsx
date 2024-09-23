@@ -1,10 +1,15 @@
 import { Box } from "@mantine/core";
 import Markdown from "react-markdown";
 
-export function MarkdownViewer() {
+interface MarkdownViewerProps {
+  text?: string; // TODO: make required
+}
+
+export function MarkdownViewer(props: MarkdownViewerProps) {
+  const { text } = props;
   return (
     <Box>
-      <Markdown>MarkdownViewer</Markdown>
+      <Markdown>{text || "MarkdownViewer"}</Markdown>
     </Box>
   );
 }

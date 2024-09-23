@@ -1,13 +1,13 @@
 import { UploadArea } from "./UploadArea";
 import { MarkdownViewer } from "./MarkdownViewer";
 
-import { Box } from "@mantine/core";
+import { Stack } from "@mantine/core";
 
 export function Home() {
   return (
-    <Box>
+    <Stack align="center" my="xl">
       <UploadArea />
       <MarkdownViewer />
-    </Box>
+    </Stack>
   );
 }
