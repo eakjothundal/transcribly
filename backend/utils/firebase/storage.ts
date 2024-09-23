@@ -22,7 +22,7 @@ const storage = getStorage(app);
 const testRef = ref(storage, "test.m4a");
 
 // Function to upload local file to Firebase Storage
-const uploadLocalFile = async (file: File | Blob) => {
+export const upload = async (file: File | Blob) => {
   try {
     // Read the local file into a buffer
     const fileBuffer = fs.readFileSync("../../testData/test.m4a");
