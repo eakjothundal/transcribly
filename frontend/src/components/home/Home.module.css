@@ -1,3 +1,7 @@
-.uploadAreaContainer {
+.uploadArea {
   width: 50%;
+}
+
+.dropzoneContent {
+  height: 100px;
 }
