@@ -12,12 +12,18 @@
   "license": "ISC",
   "dependencies": {
     "@deepgram/sdk": "^3.7.0",
+    "@mantine/core": "^7.12.2",
+    "@mantine/dropzone": "^7.12.2",
+    "@mantine/hooks": "^7.12.2",
     "axios": "^1.7.7",
     "openai": "^4.63.0"
   },
   "devDependencies": {
     "@types/node": "^22.5.5",
     "dotenv": "^16.4.5",
+    "postcss": "^8.4.47",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   }
