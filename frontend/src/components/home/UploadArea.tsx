@@ -3,15 +3,23 @@ import { Dropzone } from "@mantine/dropzone";
 
 import classes from "./Home.module.css";
 
-export function UploadArea() {
-  const uploadFile = (file: File) => {
+interface UploadAreaProps {
+  setSummary: (summary: string) => void;
+}
+
+export function UploadArea(props: UploadAreaProps) {
+  const { setSummary } = props;
+
+  const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch("http://localhost:3055/api/summarize", {
+    const response = await fetch("http://localhost:3055/api/summarize", {
       method: "POST",
       body: formData,
-    });
+    }).then((res) => res.json());
+
+    setSummary(response.summary);
   };
 
   return (

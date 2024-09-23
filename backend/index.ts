@@ -29,7 +29,7 @@ app.post("/api/summarize", multerUpload.single("file"), async (req, res) => {
   // Transcribe
   const summary = await summarizeAndTranscribe(file.path);
 
-  res.json({ message: "File received", summary });
+  res.json({ message: "File received", summary: summary });
 });
 
 // Route for /api (general route should come after)

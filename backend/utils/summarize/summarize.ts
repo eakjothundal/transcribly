@@ -8,8 +8,8 @@ const { createClient } = deepgram;
 import fs from "fs";
 
 export const summarizeAndTranscribe = async (localFilePath: string) => {
-  const transcript = await transcribe(localFilePath);
-  console.log("Transcript:   ", transcript);
+  // const transcript = await transcribe(localFilePath);
+  // console.log("Transcript:   ", transcript);
 
   if (tempTranscript) {
     const summary = await summarize(tempTranscript);
