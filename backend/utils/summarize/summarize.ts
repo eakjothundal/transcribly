@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { eakjot as profile } from "../../profiles"; // TODO: find a better place for profiles
 
-import { settingEventsTranscript as tempTranscript } from "../../testData";
+import { fujiPulseTranscript as tempTranscript } from "../../testData";
 
 import deepgram from "@deepgram/sdk";
 const { createClient } = deepgram;
@@ -12,6 +12,7 @@ export const summarizeAndTranscribe = async (localFilePath: string) => {
   // console.log("Transcript:   ", transcript); // TODO: uncomment after testing
 
   if (tempTranscript) {
+    console.log("-------- Summarizing --------");
     const summary = await summarize(tempTranscript);
     console.log("Summary:   ", summary);
     return summary;
@@ -27,7 +28,17 @@ const summarize = async (transcript: string) => {
   });
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini", // TODO: upgrade to gpt-4o when more stable
+    /**
+     * gpt-4o is significantly better than gpt-4o-mini
+     * gpt-4o-mini might be good for just testing to reduce costs
+     *
+     * I will want to try out Claude 3.5 Sonnet at some point once there
+     * is persistant data storage and there is a good amount of data to test against.
+     *
+     * gpt-o1 is not currently available via API for my tier (Tier 1).
+     * It's only available on Tier 5 at the moment with very low limits and very expensive.
+     */
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
