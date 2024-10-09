@@ -4,7 +4,7 @@ import Markdown from "react-markdown";
 import classes from "./Home.module.css";
 
 interface MarkdownViewerProps {
-  summary: string | null; // TODO: make required
+  summary: string | null;
 }
 
 export function MarkdownViewer(props: MarkdownViewerProps) {
