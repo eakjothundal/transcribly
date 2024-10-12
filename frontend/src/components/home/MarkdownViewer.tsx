@@ -11,7 +11,7 @@ export function MarkdownViewer(props: MarkdownViewerProps) {
   const { summary } = props;
   return (
     <Box className={classes.markdownViewer}>
-      <Markdown>{summary || "MarkdownViewer"}</Markdown>
+      {summary && <Markdown>{summary}</Markdown>}
     </Box>
   );
 }

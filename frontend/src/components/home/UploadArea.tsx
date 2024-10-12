@@ -1,7 +1,8 @@
-import { Box, Flex, Text } from "@mantine/core";
+import { Box, Flex, Text, Select } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 
 import classes from "./Home.module.css";
+import { useState } from "react";
 
 interface UploadAreaProps {
   setSummary: (summary: string) => void;
@@ -10,25 +11,54 @@ interface UploadAreaProps {
 export function UploadArea(props: UploadAreaProps) {
   const { setSummary } = props;
 
-  const uploadFile = async (file: File) => {
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const uploadFile = async (file: File, template: string) => {
+    setLoading(true);
+
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch("http://localhost:3055/api/summarize", {
-      method: "POST",
-      body: formData,
-    }).then((res) => res.json());
+    const response = await fetch(
+      `http://localhost:3055/api/summarize?template=${template}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+      .then((res) => res.json())
+      .finally(() => setLoading(false));
 
     setSummary(response.summary);
   };
 
   return (
     <Box className={classes.uploadArea}>
+      <Box>
+        <Select
+          label="Choose your meeting type:"
+          data={[
+            "Daily Huddle",
+            "Weekly Pulse",
+            "Bi-Weekly Check-In",
+            "Culture Chat",
+            "Quarterly",
+          ]}
+          defaultValue={"Daily Huddle"}
+          onChange={(selectedValue) =>
+            selectedValue && setSelectedTemplate(selectedValue)
+          }
+          searchable
+        />
+      </Box>
+
       <Dropzone
-        onDrop={(files) => uploadFile(files[0])}
+        onDrop={(files) => uploadFile(files[0], selectedTemplate)}
         onReject={(files) => console.log("rejected files", files)}
         maxFiles={1}
         maxSize={50 * 1024 ** 2}
+        loading={loading}
       >
         <Flex
           justify="center"
