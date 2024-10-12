@@ -7,13 +7,16 @@ import deepgram from "@deepgram/sdk";
 const { createClient } = deepgram;
 import fs from "fs";
 
-export const summarizeAndTranscribe = async (localFilePath: string) => {
+export const summarizeAndTranscribe = async (
+  localFilePath: string,
+  template: string
+) => {
   const transcript = await transcribe(localFilePath);
   console.log("Transcript:   ", transcript);
 
   if (transcript) {
     console.log("-------- Summarizing --------");
-    const summary = await summarize(transcript);
+    const summary = await summarize(transcript, template);
     console.log("Summary:   ", summary);
     return summary;
   }
@@ -21,7 +24,7 @@ export const summarizeAndTranscribe = async (localFilePath: string) => {
   console.error("No transcript");
 };
 
-const summarize = async (transcript: string) => {
+const summarize = async (transcript: string, template: string) => {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
     project: process.env.OPENAI_PROJECT_KEY,

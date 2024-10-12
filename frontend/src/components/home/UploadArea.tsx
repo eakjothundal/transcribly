@@ -8,6 +8,14 @@ interface UploadAreaProps {
   setSummary: (summary: string) => void;
 }
 
+const templates = [
+  "Daily Huddle",
+  "Weekly Pulse",
+  "Bi-Weekly Check-In",
+  "Culture Chat",
+  "Quarterly",
+];
+
 export function UploadArea(props: UploadAreaProps) {
   const { setSummary } = props;
 
@@ -15,6 +23,11 @@ export function UploadArea(props: UploadAreaProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const uploadFile = async (file: File, template: string) => {
+    if (!templates.includes(template)) {
+      console.error("Invalid template, check the logic and try again");
+      return;
+    }
+
     setLoading(true);
 
     const formData = new FormData();
@@ -38,13 +51,7 @@ export function UploadArea(props: UploadAreaProps) {
       <Box>
         <Select
           label="Choose your meeting type:"
-          data={[
-            "Daily Huddle",
-            "Weekly Pulse",
-            "Bi-Weekly Check-In",
-            "Culture Chat",
-            "Quarterly",
-          ]}
+          data={templates}
           defaultValue={"Daily Huddle"}
           onChange={(selectedValue) =>
             selectedValue && setSelectedTemplate(selectedValue)

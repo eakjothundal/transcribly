@@ -21,13 +21,14 @@ app.use(
 
 app.post("/api/summarize", multerUpload.single("file"), async (req, res) => {
   const file = req.file as Express.Multer.File;
+  const template = req.query.template as string;
 
   if (!file) {
     return res.status(400).send("No file uploaded.");
   }
 
   // Transcribe
-  const summary = await summarizeAndTranscribe(file.path);
+  const summary = await summarizeAndTranscribe(file.path, template);
 
   res.json({ message: "File received", summary: summary });
 });
