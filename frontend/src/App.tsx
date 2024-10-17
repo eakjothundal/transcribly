@@ -2,18 +2,14 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 
-import { Home } from "./components/home";
+// import { Home } from "./components/Home";
+import { Login } from "./components/Login";
 
 function App() {
-  // const justDoIt = () => {
-  //   fetch(`http://localhost:3055/api`)
-  //     .then((res) => res.json()) // Parse JSON
-  //     .then((data) => setData(data.message)); // Set the message as data
-  // };
-
   return (
     <MantineProvider>
-      <Home />
+      {/* <Home /> */}
+      <Login />
     </MantineProvider>
   );
 }

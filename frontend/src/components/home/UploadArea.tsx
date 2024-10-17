@@ -33,6 +33,8 @@ export function UploadArea(props: UploadAreaProps) {
     const formData = new FormData();
     formData.append("file", file);
 
+    console.log("starting");
+
     const response = await fetch(
       `http://localhost:3055/api/summarize?template=${template}`,
       {

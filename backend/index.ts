@@ -23,6 +23,8 @@ app.post("/api/summarize", multerUpload.single("file"), async (req, res) => {
   const file = req.file as Express.Multer.File;
   const template = req.query.template as string;
 
+  // console.log("starting");
+
   if (!file) {
     return res.status(400).send("No file uploaded.");
   }
