@@ -8,6 +8,6 @@ export const addTemplate = async (name: string, definition: string) => {
   });
 
   if (error) {
-    console.error("Error inserting new template: ", { error });
+    console.error("Error inserting new template: ", error.message);
   }
 };

@@ -8,6 +8,6 @@ export const addProject = async (name: string, description: string) => {
   });
 
   if (error) {
-    console.error("Error inserting new project: ", { error });
+    console.error("Error inserting new project: ", error.message);
   }
 };
