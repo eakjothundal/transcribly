@@ -7,6 +7,7 @@ import classes from "./Home.module.css";
 
 import { Stack } from "@mantine/core";
 import { useState } from "react";
+import { LogoutButton } from "../Auth/LogoutButton/LogoutButton";
 
 export function Home() {
   const [summary, setSummary] = useState<string | null>(null);
@@ -17,6 +18,7 @@ export function Home() {
       <AddTemplate />
       <UploadArea setSummary={setSummary} />
       <MarkdownViewer summary={summary} />
+      <LogoutButton />
     </Stack>
   );
 }

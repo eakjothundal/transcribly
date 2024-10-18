@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../../utils/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 import { Box } from "@mantine/core";
 
-import { Home } from "../Home";
+import { Home } from "../../Home";
 
 import classes from "./Login.module.css";
 
