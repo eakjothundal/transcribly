@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
 import { useCallback, useState } from "react";
 
-import { addProject } from "../../../utils/supabase/db";
+import { addTemplate } from "../../../utils/supabase/db";
 
 import classes from "./AddTemplate.module.css";
 
@@ -34,19 +34,19 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
 ) {
   const { opened, closeModal } = props;
 
-  const [templateName, setTemplatetName] = useState<string | undefined>(
+  const [templateName, setTemplateName] = useState<string | undefined>(
     undefined
   );
-  const [templateDescription, setTemplateDescription] = useState<
+  const [templateDefinition, setTemplateDescription] = useState<
     string | undefined
   >(undefined);
 
   const handleAddTemplate = useCallback(() => {
-    if (templateName && templateDescription) {
-      addProject(templateName, templateDescription);
+    if (templateName && templateDefinition) {
+      addTemplate(templateName, templateDefinition);
       closeModal();
     }
-  }, [templateName, templateDescription, closeModal]);
+  }, [templateName, templateDefinition, closeModal]);
 
   return (
     <Modal
@@ -62,14 +62,14 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
           label="Template Name"
           placeholder="New Template"
           value={templateName}
-          onChange={(event) => setTemplatetName(event.currentTarget.value)}
+          onChange={(event) => setTemplateName(event.currentTarget.value)}
         />
 
-        {/* DESCRIPTION */}
+        {/* DEFINITION */}
         <Textarea
-          label="Template Description"
+          label="Template Definition"
           description="This will be used as extra context in summarization, so try to be detailed here."
-          value={templateDescription}
+          value={templateDefinition}
           onChange={(event) =>
             setTemplateDescription(event.currentTarget.value)
           }
