@@ -1,0 +1,10 @@
+.addTemplateModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.addTemplateButton {
+  display: flex;
+  justify-content: flex-end;
+}
