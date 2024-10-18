@@ -1,4 +1,4 @@
-import { Box, Button, Modal } from "@mantine/core";
+import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
 import { useState } from "react";
 
 export function AddProject() {
@@ -10,7 +10,7 @@ export function AddProject() {
 
       <AddProject.AddProjectModal
         opened={addingProject}
-        closeModal={setAddingProject}
+        closeModal={() => setAddingProject(false)}
       />
     </Box>
   );
@@ -18,7 +18,7 @@ export function AddProject() {
 
 export interface AddProjectModalProps {
   opened: boolean;
-  closeModal: (opened: false) => void;
+  closeModal: () => void;
 }
 
 AddProject.AddProjectModal = function AddProjectModal(
@@ -26,5 +26,38 @@ AddProject.AddProjectModal = function AddProjectModal(
 ) {
   const { opened, closeModal } = props;
 
-  return <Modal opened={opened} onClose={() => closeModal(false)} />;
+  const [projectName, setProjectName] = useState<string | undefined>(undefined);
+  const [projectDescription, setProjectDescription] = useState<
+    string | undefined
+  >(undefined);
+
+  return (
+    <Modal opened={opened} onClose={closeModal} title="Add a New Project">
+      <Box>
+        {/* NAME */}
+        <TextInput
+          label="Project Name"
+          placeholder="New Project"
+          value={projectName}
+          onChange={(event) => setProjectName(event.currentTarget.value)}
+        />
+
+        {/* DESCRIPTION */}
+        <Textarea
+          label="Project Description"
+          description="This will be used as extra context in summarization, so try to be detailed here."
+          value={projectDescription}
+          onChange={(event) => setProjectDescription(event.currentTarget.value)}
+          autosize
+          minRows={2}
+          maxRows={6}
+        />
+
+        {/* ADD PROJECT BUTTON */}
+        <Box>
+          <Button variant="gradient">Add Project</Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
 };
