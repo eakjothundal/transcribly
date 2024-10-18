@@ -1,6 +1,8 @@
 import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
 import { useState } from "react";
 
+import classes from "./AddProject.module.css";
+
 export function AddProject() {
   const [addingProject, setAddingProject] = useState<boolean>(false);
 
@@ -32,8 +34,14 @@ AddProject.AddProjectModal = function AddProjectModal(
   >(undefined);
 
   return (
-    <Modal opened={opened} onClose={closeModal} title="Add a New Project">
-      <Box>
+    <Modal
+      title="Add a New Project"
+      opened={opened}
+      onClose={closeModal}
+      size="lg"
+      radius="md"
+    >
+      <Box className={classes.addProjectModalContent}>
         {/* NAME */}
         <TextInput
           label="Project Name"
@@ -49,12 +57,12 @@ AddProject.AddProjectModal = function AddProjectModal(
           value={projectDescription}
           onChange={(event) => setProjectDescription(event.currentTarget.value)}
           autosize
-          minRows={2}
+          minRows={3}
           maxRows={6}
         />
 
         {/* ADD PROJECT BUTTON */}
-        <Box>
+        <Box className={classes.addProjectButton}>
           <Button variant="gradient">Add Project</Button>
         </Box>
       </Box>

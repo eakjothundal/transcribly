@@ -1,0 +1,10 @@
+.addProjectModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.addProjectButton {
+  display: flex;
+  justify-content: flex-end;
+}
