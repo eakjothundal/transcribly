@@ -1,5 +1,6 @@
 import { UploadArea } from "./UploadArea";
 import { MarkdownViewer } from "./MarkdownViewer";
+import { AddProject } from "../Projects";
 
 import classes from "./Home.module.css";
 
@@ -11,6 +12,7 @@ export function Home() {
 
   return (
     <Stack align="center" className={classes.home}>
+      <AddProject />
       <UploadArea setSummary={setSummary} />
       <MarkdownViewer summary={summary} />
     </Stack>
