@@ -1,5 +1,7 @@
 import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+
+import { addProject } from "../../../utils/supabase/db";
 
 import classes from "./AddProject.module.css";
 
@@ -33,6 +35,13 @@ AddProject.AddProjectModal = function AddProjectModal(
     string | undefined
   >(undefined);
 
+  const handleAddProject = useCallback(() => {
+    if (projectName && projectDescription) {
+      addProject(projectName, projectDescription);
+      closeModal();
+    }
+  }, [projectName, projectDescription, closeModal]);
+
   return (
     <Modal
       title="Add a New Project"
@@ -63,7 +72,9 @@ AddProject.AddProjectModal = function AddProjectModal(
 
         {/* ADD PROJECT BUTTON */}
         <Box className={classes.addProjectButton}>
-          <Button variant="gradient">Add Project</Button>
+          <Button variant="gradient" onClick={handleAddProject}>
+            Add Project
+          </Button>
         </Box>
       </Box>
     </Modal>
