@@ -54,10 +54,10 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
 
   const handleAddTemplate = useCallback(() => {
     if (templateName && templateDefinition) {
-      addTemplate(templateName, templateDefinition);
+      addTemplate(templateName, templateDefinition, templateSettings);
       closeModal();
     }
-  }, [templateName, templateDefinition, closeModal]);
+  }, [templateName, templateDefinition, templateSettings, closeModal]);
 
   return (
     <Modal
