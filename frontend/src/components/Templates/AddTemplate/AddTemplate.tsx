@@ -1,13 +1,21 @@
-import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Modal,
+  Text,
+  Textarea,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import { useCallback, useState } from "react";
 
 import { addTemplate } from "../../../utils/supabase/db";
 
 import classes from "./AddTemplate.module.css";
-
-// TODO: NEED TO FIGURE OUT HOW TO CONTROL TEMPLATE FIELDS - SHOULD BE A OBJECT THAT ARE ENABLED
-// ONCE ENABLED, SHOULD ACCEPT TEXT INSTRUCTIONS FOR THAT FIELD (SUMMARY ENABLED -> TEXT AREA APPEARS)
-// THIS ABILITY NEEDS TO BE SUPPORTED IN THE DATABASE - CURRENTLY ISN'T
+import { TemplateSettings } from "../../../interfaces/templates/templates";
+import { initialTemplateSettings } from "./defaults";
+import { MeetingSummaryOptions } from "../../../interfaces/meetings";
 
 export function AddTemplate() {
   const [addingTemplate, setAddingTemplate] = useState<boolean>(false);
@@ -40,6 +48,9 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
   const [templateDefinition, setTemplateDescription] = useState<
     string | undefined
   >(undefined);
+  const [templateSettings, setTemplateSettings] = useState<TemplateSettings>(
+    initialTemplateSettings
+  );
 
   const handleAddTemplate = useCallback(() => {
     if (templateName && templateDefinition) {
@@ -77,6 +88,61 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
           minRows={3}
           maxRows={6}
         />
+
+        {/* SETTINGS */}
+        <Box>
+          <Text>Choose which fields to include in the template:</Text>
+        </Box>
+        {Object.keys(templateSettings).map((key) => {
+          const settingKey = key as MeetingSummaryOptions;
+          const setting = templateSettings[settingKey];
+
+          // Capitalize the first letter and replace underscores
+          const label =
+            settingKey.charAt(0).toUpperCase() +
+            settingKey.slice(1).replace(/_/g, " ");
+
+          return (
+            <Box key={settingKey}>
+              <Tooltip label={setting.description} withArrow position="left">
+                <Checkbox
+                  label={`${label}`}
+                  checked={setting.enabled}
+                  onChange={(event) =>
+                    setTemplateSettings({
+                      ...templateSettings,
+                      [settingKey]: {
+                        ...setting,
+                        enabled: event.currentTarget.checked,
+                      },
+                    })
+                  }
+                />
+              </Tooltip>
+
+              {setting.enabled && (
+                <Textarea
+                  label={`Instructions for ${label}`}
+                  placeholder={`Provide specific instructions for ${label.toLowerCase()}`}
+                  value={setting.instructions}
+                  onChange={(event) =>
+                    setTemplateSettings({
+                      ...templateSettings,
+                      [settingKey]: {
+                        ...setting,
+                        instructions: event.currentTarget.value,
+                      },
+                    })
+                  }
+                  autosize
+                  minRows={2}
+                  maxRows={4}
+                  mt="xs"
+                />
+              )}
+            </Box>
+          );
+        })}
 
         {/* ADD PROJECT BUTTON */}
         <Box className={classes.addTemplateButton}>
