@@ -2,6 +2,7 @@ import { UploadArea } from "./UploadArea";
 import { MarkdownViewer } from "./MarkdownViewer";
 import { AddProject } from "../Projects";
 import { AddTemplate } from "../Templates";
+import { NewMeeting } from "../Meetings";
 
 import classes from "./Home.module.css";
 
@@ -16,6 +17,7 @@ export function Home() {
     <Stack align="center" className={classes.home}>
       <AddProject />
       <AddTemplate />
+      <NewMeeting />
       <UploadArea setSummary={setSummary} />
       <MarkdownViewer summary={summary} />
       <LogoutButton />
