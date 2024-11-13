@@ -22,12 +22,12 @@ export type Meeting = {
   added_context?: string;
   transcript?: string;
   summary?: string;
-  notes?: ListField;
-  action_items?: ListField;
-  key_topics?: ListField;
-  decisions?: ListField;
-  next_steps?: ListField;
-  improvements?: ListField;
-  vibe?: string;
+  notes?: ListField | null;
+  action_items?: ListField | null;
+  key_topics?: ListField | null;
+  decisions?: ListField | null;
+  next_steps?: ListField | null;
+  improvements?: ListField | null;
+  vibe?: string | null;
   updated_at?: string; // autoset in the database initially, updated by the user on edit
 };

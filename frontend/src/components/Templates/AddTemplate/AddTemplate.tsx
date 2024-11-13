@@ -74,6 +74,8 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
           placeholder="New Template"
           value={templateName}
           onChange={(event) => setTemplateName(event.currentTarget.value)}
+          required
+          withAsterisk
         />
 
         {/* DEFINITION */}
@@ -87,6 +89,8 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
           autosize
           minRows={3}
           maxRows={6}
+          required
+          withAsterisk
         />
 
         {/* SETTINGS */}

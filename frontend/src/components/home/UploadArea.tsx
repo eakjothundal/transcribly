@@ -3,15 +3,17 @@ import { Dropzone } from "@mantine/dropzone";
 
 import classes from "./Home.module.css";
 import { useState } from "react";
+import { Meeting } from "../../interfaces/meetings/meetings";
 
 interface UploadAreaProps {
-  setSummary: (summary: string) => void;
+  setSummary: (summary: Partial<Meeting>) => void;
+  setTranscript: (transcript: string) => void;
   templateID?: string;
   disabled?: boolean;
 }
 
 export function UploadArea(props: UploadAreaProps) {
-  const { setSummary, templateID, disabled } = props;
+  const { setSummary, setTranscript, templateID, disabled } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,7 +35,8 @@ export function UploadArea(props: UploadAreaProps) {
       .then((res) => res.json())
       .finally(() => setLoading(false));
 
-    setSummary(response.summary);
+    setTranscript(response.res.transcript);
+    setSummary(JSON.parse(response.res.summary));
   };
 
   return (

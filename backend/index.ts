@@ -3,8 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
 
-import { upload } from "./utils/firebase/storage";
-import { summarizeAndTranscribe } from "./utils/summarize";
+import { upload } from "./utils/firebase/storage.ts";
+import { summarizeAndTranscribe } from "./utils/summarize/summarize.ts";
 
 dotenv.config();
 const app = express();
@@ -32,7 +32,7 @@ app.post("/api/summarize", multerUpload.single("file"), async (req, res) => {
   // Transcribe
   const summary = await summarizeAndTranscribe(file.path, template);
 
-  res.json({ message: "File received", summary: summary });
+  res.json({ message: "File received", res: summary });
 });
 
 // Route for /api (general route should come after)

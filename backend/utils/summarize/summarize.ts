@@ -27,7 +27,7 @@ export const summarizeAndTranscribe = async (
     console.log("-------- Summarizing --------");
     const summary = await summarize(transcript, template[0].template_settings);
     console.log("Summary:   ", summary);
-    return summary;
+    return { transcript, summary };
   }
 
   console.error("No transcript");

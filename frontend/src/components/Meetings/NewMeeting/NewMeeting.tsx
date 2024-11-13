@@ -10,6 +10,7 @@ import { Template } from "../../../interfaces/templates/templates";
 import { Project } from "../../../interfaces/projects";
 import { UploadArea } from "../../Home/UploadArea";
 import { addMeeting } from "../../../utils/supabase/db/meetings";
+import { Meeting } from "../../../interfaces/meetings/meetings";
 
 export function NewMeeting() {
   const [addingMeeting, setAddingMeeting] = useState<boolean>(false);
@@ -49,7 +50,8 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
   const [meetingDateAndTime, setMeetingDateAndTime] = useState<string>(
     new Date().toISOString()
   );
-  const [summary, setSummary] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState<string | null>(null);
+  const [summary, setSummary] = useState<Partial<Meeting> | null>(null);
 
   // Fetch states
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -83,18 +85,29 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
       !selectedTemplate ||
       !meetingName ||
       meetingName === "" ||
+      !transcript ||
       !summary
     )
       return;
 
-    addMeeting({
+    await addMeeting({
       meeting_name: meetingName,
       project_id: selectedProject!,
       template_id: selectedTemplate!,
       meeting_date: meetingDateAndTime,
       added_context: addedContext,
-      summary: summary,
+      transcript: transcript,
+      summary: summary.summary,
+      notes: summary.notes ? summary.notes : null,
+      action_items: summary.action_items ? summary.action_items : null,
+      key_topics: summary.key_topics ? summary.key_topics : null,
+      decisions: summary.decisions ? summary.decisions : null,
+      next_steps: summary.next_steps ? summary.next_steps : null,
+      improvements: summary.improvements ? summary.improvements : null,
+      vibe: summary.vibe ? summary.vibe : null,
     });
+
+    closeModal();
   }, [
     meetingName,
     selectedProject,
@@ -102,6 +115,8 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
     meetingDateAndTime,
     addedContext,
     summary,
+    transcript,
+    closeModal,
   ]);
 
   return (
@@ -178,6 +193,7 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
         <Box className={classes.uploadAudioArea}>
           <UploadArea
             setSummary={setSummary}
+            setTranscript={setTranscript}
             disabled={disableUpload}
             templateID={selectedTemplate}
           />
