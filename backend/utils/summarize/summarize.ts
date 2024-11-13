@@ -89,8 +89,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description:
-            "A long, very detailed summary of the meeting. Split paragraphs in different array indexes.",
+          description: `A long, very detailed summary of the meeting. Split paragraphs in different array indexes. ${templateSettings.summary?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -108,7 +107,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description: "A comprehensive list of notes from the meeting.",
+          description: `A comprehensive list of notes from the meeting. ${templateSettings.notes?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -126,8 +125,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description:
-            "An in-depth, detailed list of action items identified during the meeting.",
+          description: `An in-depth, detailed list of action items identified during the meeting. ${templateSettings.action_items?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -145,8 +143,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description:
-            "An in-depth, detailed list of key topics discussed in the meeting. Leaves no stone unturned.",
+          description: `An in-depth, detailed list of key topics discussed in the meeting. Leaves no stone unturned. ${templateSettings.key_topics?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -164,8 +161,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description:
-            "A list of each and every decision/agreement made during the meeting.",
+          description: `A list of each and every decision/agreement made during the meeting. ${templateSettings.decisions?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -183,7 +179,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description: "A list of next steps agreed upon in the meeting.",
+          description: `A list of next steps agreed upon in the meeting. ${templateSettings.next_steps?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -201,8 +197,7 @@ const summarize = async (
           items: {
             type: "string",
           },
-          description:
-            "A list of suggested improvements following the meeting. These improvements are on how the meeting could've gone better.",
+          description: `A list of suggested improvements following the meeting. These improvements are on how the meeting could've gone better. ${templateSettings.improvements?.instructions}`,
         },
       },
       additionalProperties: false,
@@ -213,7 +208,7 @@ const summarize = async (
   if (templateSettings.vibe?.enabled) {
     properties.vibe = {
       type: "string",
-      description: "The general vibe or atmosphere of the meeting.",
+      description: `The general vibe or atmosphere of the meeting. ${templateSettings.vibe?.instructions}`,
     };
     required.push("vibe");
   }
