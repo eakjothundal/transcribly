@@ -10,3 +10,9 @@
   width: 70%;
   margin-top: 2.25rem;
 }
+
+.dropzoneDisabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
