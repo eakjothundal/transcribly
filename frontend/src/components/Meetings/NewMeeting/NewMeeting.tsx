@@ -1,11 +1,14 @@
-import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
-import { useCallback, useState } from "react";
+import { Box, Button, Modal, Select, Textarea, TextInput } from "@mantine/core";
+import { DateTimePicker } from "@mantine/dates";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { addProject } from "../../../utils/supabase/db";
+import { getAllTemplates } from "../../../utils/supabase/db/templates";
+import { getAllProjects } from "../../../utils/supabase/db/projects";
 
 import classes from "./NewMeeting.module.css";
-
-// TODO: THIS IS MOSTLY COPIED FROM ADDPROJECT - UPDATE BEFORE USING
+import { Template } from "../../../interfaces/templates/templates";
+import { Project } from "../../../interfaces/projects";
+import { UploadArea } from "../../Home/UploadArea";
 
 export function NewMeeting() {
   const [addingMeeting, setAddingMeeting] = useState<boolean>(false);
@@ -34,50 +37,126 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
 ) {
   const { opened, closeModal } = props;
 
-  const [projectName, setProjectName] = useState<string | undefined>(undefined);
-  const [projectDescription, setProjectDescription] = useState<
+  // MEETING FIELD STATES
+  const [meetingName, setMeetingName] = useState<string | undefined>(undefined);
+  const [selectedTemplate, setSelectedTemplate] = useState<
     string | undefined
-  >(undefined);
+  >();
+  const [selectedProject, setSelectedProject] = useState<string | undefined>();
+  const [addedContext, setAddedContext] = useState<string>("");
+  // meeting date as timestampz to work with postgresql
+  const [meetingDateAndTime, setMeetingDateAndTime] = useState<string>(
+    new Date().toISOString()
+  );
+  const [summary, setSummary] = useState<string | null>(null);
 
-  const handleAddProject = useCallback(() => {
-    if (projectName && projectDescription) {
-      addProject(projectName, projectDescription);
-      closeModal();
-    }
-  }, [projectName, projectDescription, closeModal]);
+  // Fetch states
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  // Fetch all templates
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      const templatesData = await getAllTemplates();
+      setTemplates(templatesData || []);
+    };
+
+    const fetchProjects = async () => {
+      const projectsData = await getAllProjects();
+      setProjects(projectsData || []);
+    };
+
+    fetchTemplates();
+    fetchProjects();
+  }, []);
+
+  const disableUpload = useMemo(
+    () => !meetingName || !selectedTemplate || !selectedProject,
+    [meetingName, selectedTemplate, selectedProject]
+  );
+
+  // Add Meeting
+  const handleSaveMeeting = useCallback(async () => {}, []);
 
   return (
     <Modal
-      title="Add a New Project"
+      title="Summarize Meeting"
       opened={opened}
       onClose={closeModal}
-      size="lg"
+      size="xl"
       radius="md"
     >
-      <Box className={classes.addProjectModalContent}>
+      <Box className={classes.newMeetingModalContent}>
         {/* NAME */}
         <TextInput
-          label="Project Name"
-          placeholder="New Project"
-          value={projectName}
-          onChange={(event) => setProjectName(event.currentTarget.value)}
+          label="Meeting Name"
+          placeholder="New Meeting"
+          value={meetingName}
+          onChange={(event) => setMeetingName(event.currentTarget.value)}
+          required
+          withAsterisk
         />
 
-        {/* DESCRIPTION */}
+        {/* DATE */}
+        <DateTimePicker
+          label="Meeting Date and Time"
+          value={new Date(meetingDateAndTime)}
+          valueFormat="DD/MM/YYYY hh:mm A"
+          onChange={(value) =>
+            value && setMeetingDateAndTime(value.toISOString())
+          }
+          required
+          withAsterisk
+        />
+
+        {/* PROJECT */}
+        <Select
+          label="Project"
+          placeholder="Select a Project"
+          data={projects.map((project) => ({
+            value: project.project_id,
+            label: project.project_name,
+          }))}
+          value={selectedProject}
+          onChange={(value) => value && setSelectedProject(value)}
+          required
+          withAsterisk
+        />
+
+        {/* TEMPLATE */}
+        <Select
+          label="Template"
+          placeholder="Select a Template"
+          data={templates.map((template) => ({
+            value: template.template_id,
+            label: template.template_name,
+          }))}
+          value={selectedTemplate}
+          onChange={(value) => value && setSelectedTemplate(value)}
+          required
+          withAsterisk
+        />
+
+        {/* ADDED CONTEXT */}
         <Textarea
-          label="Project Description"
+          label="Added Context"
           description="This will be used as extra context in summarization, so try to be detailed here."
-          value={projectDescription}
-          onChange={(event) => setProjectDescription(event.currentTarget.value)}
+          value={addedContext}
+          onChange={(event) => setAddedContext(event.currentTarget.value)}
           autosize
           minRows={3}
           maxRows={6}
         />
 
+        {/* UPLOAD */}
+        <Box className={classes.uploadAudioArea}>
+          <UploadArea setSummary={setSummary} disabled={disableUpload} />
+        </Box>
+
         {/* ADD PROJECT BUTTON */}
-        <Box className={classes.addProjectButton}>
-          <Button variant="gradient" onClick={handleAddProject}>
-            Add Project
+        <Box className={classes.addMeetingButton}>
+          <Button variant="gradient" disabled={!summary}>
+            Add Meeting
           </Button>
         </Box>
       </Box>
