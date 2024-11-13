@@ -35,6 +35,15 @@ export const summarizeAndTranscribe = async (
   console.error("No transcript");
 };
 
+type JSONSchemaProperty = {
+  type: string;
+  required?: string[];
+  properties?: { [key: string]: JSONSchemaProperty };
+  items?: JSONSchemaProperty;
+  description?: string;
+  additionalProperties?: boolean;
+};
+
 const summarizeTranscript = async (
   transcript: string,
   templateSettings: TemplateSettings
@@ -74,8 +83,8 @@ const summarizeTranscript = async (
   if (!responseFormat.json_schema || !responseFormat.json_schema.schema) {
     throw new Error("Invalid response format schema");
   }
-  const properties: { [key: string]: any } =
-    responseFormat.json_schema.schema.properties || {};
+  const properties: { [key: string]: JSONSchemaProperty } =
+    responseFormat.json_schema.schema.properties || Object.create(null);
   const required: string[] = Array.isArray(
     responseFormat.json_schema.schema.required
   )
