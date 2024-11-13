@@ -31,60 +31,164 @@ const summarize = async (transcript: string, template: string) => {
   });
 
   const completion = await openai.chat.completions.create({
-    /**
-     * gpt-4o is significantly better than gpt-4o-mini
-     * gpt-4o-mini might be good for just testing to reduce costs
-     *
-     * I will want to try out Claude 3.5 Sonnet at some point once there
-     * is persistant data storage and there is a good amount of data to test against.
-     *
-     * gpt-o1 is not currently available via API for my tier (Tier 1).
-     * It's only available on Tier 5 at the moment with very low limits and very expensive.
-     */
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        // TODO: move out content to make summarize function reusable
-        content: `
-          You are an expert meeting assistant specialized in creating clear, comprehensive, and actionable meeting summaries.
-          
-          Your boss: ${profile}
-
-          Your task is to extract detailed insights from meeting transcriptions, making sure to prioritize readability and key actionable items.
-          The summary must be structured, visually clear, and use Markdown-friendly formatting including colors, whitespace, headings, and lists for easy digestion.
-
-          The structure should be as follows:
-
-          1. **Meeting Overview**: A brief 2-3 sentence overview summarizing the meeting purpose.
-          2. **Key Topics and Discussions**:
-              - Use headings for each major discussion topic.
-              - Break down subtopics clearly with bullet points or short paragraphs.
-          3. **Decisions Made**: List key decisions, along with rationale.
-          4. **Action Items**:
-              - Clearly assign owners, deadlines, and note any risks or dependencies for each task.
-              - Use callouts or highlights for urgent tasks (e.g., bold, color-coded).
-          5. **Sentiment & Tone Analysis**: Analyze the mood and tone of the meeting, noting any signs of tension, collaboration, or areas for improvement.
-          6. **Suggestions for Improvement**: Provide concrete suggestions to improve meeting structure, engagement, or decision-making.
-          7. **Detailed Notes**: Provide a deep, paragraph-level summary that covers all detailed discussions for record-keeping purposes.
-
-          Ensure the formatting uses whitespace effectively to separate sections, and use Markdown for:
-          - **Headings** for structure.
-          - **Bullet points** for clarity.
-          - **Bold** or **italicized** text to highlight key items.
-
-          Transcript: ${transcript}
-        `,
+        content: [
+          {
+            text: "You are an expert meeting assistant specializing in creating clear, comprehensive, and actionable meeting summaries.",
+            type: "text",
+          },
+        ],
       },
       {
         role: "user",
-        // TODO: move out content to make summarize function reusable
-        content: `
-          Please summarize the meeting based on the provided transcript using the structured format outlined. 
-          Ensure all key points, decisions, action items, and suggestions are captured clearly and exhaustively.
-        `,
+        content: [
+          {
+            text: `Transcript: ${transcript}`,
+            type: "text",
+          },
+        ],
       },
     ],
+    temperature: 1,
+    max_tokens: 16383,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "meeting_summary",
+        schema: {
+          type: "object",
+          required: [
+            "summary",
+            "notes",
+            "action_items",
+            "key_topics",
+            "decisions",
+            "next_steps",
+            "improvements",
+            "vibe",
+          ],
+          properties: {
+            summary: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "A long, very detailed summary of the meeting. Split paragraphs in different array indexes.",
+                },
+              },
+              additionalProperties: false,
+            },
+            notes: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "A comprehensive list of notes from the meeting.",
+                },
+              },
+              additionalProperties: false,
+            },
+            action_items: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "An in-depth, detailed list of action items identified during the meeting.",
+                },
+              },
+              additionalProperties: false,
+            },
+            key_topics: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "An in-depth, detailed list of key topics discussed in the meeting. Leaves no stone unturned.",
+                },
+              },
+              additionalProperties: false,
+            },
+            decisions: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "A list of each and every decision/agreement made during the meeting.",
+                },
+              },
+              additionalProperties: false,
+            },
+            next_steps: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "A list of next steps agreed upon in the meeting.",
+                },
+              },
+              additionalProperties: false,
+            },
+            improvements: {
+              type: "object",
+              required: ["value"],
+              properties: {
+                value: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "A list of suggested improvements following the meeting. These improvements are on how the meeting could've gone better.",
+                },
+              },
+              additionalProperties: false,
+            },
+            vibe: {
+              type: "string",
+              description: "The general vibe or atmosphere of the meeting.",
+            },
+          },
+          additionalProperties: false,
+        },
+        strict: true,
+      },
+    },
   });
 
   const summary = completion.choices[0].message.content;
