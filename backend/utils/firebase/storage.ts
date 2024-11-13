@@ -3,7 +3,7 @@ import { ServiceAccount } from "firebase-admin";
 import { getStorage } from "firebase-admin/storage";
 import fs from "fs";
 
-import { firebaseAdminServiceAccount } from "./config";
+import { firebaseAdminServiceAccount } from "../config.ts";
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({

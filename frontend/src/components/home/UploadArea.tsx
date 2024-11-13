@@ -6,15 +6,16 @@ import { useState } from "react";
 
 interface UploadAreaProps {
   setSummary: (summary: string) => void;
+  templateID?: string;
   disabled?: boolean;
 }
 
 export function UploadArea(props: UploadAreaProps) {
-  const { setSummary, disabled } = props;
+  const { setSummary, templateID, disabled } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const uploadFile = async (file: File, template: string) => {
+  const uploadFile = async (file: File) => {
     setLoading(true);
 
     const formData = new FormData();
@@ -23,7 +24,7 @@ export function UploadArea(props: UploadAreaProps) {
     console.log("starting");
 
     const response = await fetch(
-      `http://localhost:3055/api/summarize?template=${template}`,
+      `http://localhost:3055/api/summarize?template=${templateID}`,
       {
         method: "POST",
         body: formData,
@@ -38,7 +39,7 @@ export function UploadArea(props: UploadAreaProps) {
   return (
     <Box>
       <Dropzone
-        onDrop={(files) => uploadFile(files[0], "meeting")}
+        onDrop={(files) => uploadFile(files[0])}
         onReject={(files) => console.log("rejected files", files)}
         maxFiles={1}
         maxSize={50 * 1024 ** 2}

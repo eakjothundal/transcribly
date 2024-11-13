@@ -13,6 +13,7 @@ export function Home() {
       <AddProject />
       <AddTemplate />
       <NewMeeting />
+
       <LogoutButton />
     </Stack>
   );

@@ -176,7 +176,11 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
 
         {/* UPLOAD */}
         <Box className={classes.uploadAudioArea}>
-          <UploadArea setSummary={setSummary} disabled={disableUpload} />
+          <UploadArea
+            setSummary={setSummary}
+            disabled={disableUpload}
+            templateID={selectedTemplate}
+          />
         </Box>
 
         {/* ADD PROJECT BUTTON */}

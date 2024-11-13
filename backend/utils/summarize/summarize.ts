@@ -1,22 +1,31 @@
 import OpenAI from "openai";
-import { eakjot as profile } from "../../profiles"; // TODO: find a better place for profiles
 
-import { fujiPulseTranscript as tempTranscript } from "../../testData";
+import { getTemplate } from "../supabase/templates/getTemplate.ts";
 
 import deepgram from "@deepgram/sdk";
 const { createClient } = deepgram;
 import fs from "fs";
+import { TemplateSettings } from "../../../frontend/src/interfaces/templates/templates.ts";
 
 export const summarizeAndTranscribe = async (
   localFilePath: string,
-  template: string
+  templateID: string
 ) => {
+  console.log("templateID: ", templateID);
+  const template = await getTemplate(templateID);
+
+  if (template && template.length > 0) {
+    console.log("Template:   ", template[0].template_settings);
+  } else {
+    console.error("Template is null or empty");
+    return;
+  }
+
   const transcript = await transcribe(localFilePath);
-  console.log("Transcript:   ", transcript);
 
   if (transcript) {
     console.log("-------- Summarizing --------");
-    const summary = await summarize(transcript, template);
+    const summary = await summarize(transcript, template[0].template_settings);
     console.log("Summary:   ", summary);
     return summary;
   }
@@ -24,171 +33,200 @@ export const summarizeAndTranscribe = async (
   console.error("No transcript");
 };
 
-const summarize = async (transcript: string, template: string) => {
+const summarize = async (
+  transcript: string,
+  templateSettings: TemplateSettings
+) => {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
     project: process.env.OPENAI_PROJECT_KEY,
   });
 
+  const messages: OpenAI.ChatCompletionMessageParam[] = [
+    {
+      role: "system",
+      content:
+        "You are an expert meeting assistant specializing in creating clear, comprehensive, and actionable meeting summaries.",
+    },
+    {
+      role: "user",
+      content: `Transcript: ${transcript}`,
+    },
+  ];
+
+  const responseFormat: OpenAI.ResponseFormatJSONSchema = {
+    type: "json_schema",
+    json_schema: {
+      name: "meeting_summary",
+      schema: {
+        type: "object",
+        required: [],
+        properties: {},
+        additionalProperties: false,
+      },
+      strict: true,
+    },
+  };
+
+  if (!responseFormat.json_schema || !responseFormat.json_schema.schema) {
+    throw new Error("Invalid response format schema");
+  }
+  const properties: { [key: string]: any } =
+    responseFormat.json_schema.schema.properties || {};
+  const required: string[] = Array.isArray(
+    responseFormat.json_schema.schema.required
+  )
+    ? responseFormat.json_schema.schema.required
+    : [];
+
+  if (templateSettings.summary?.enabled) {
+    properties.summary = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description:
+            "A long, very detailed summary of the meeting. Split paragraphs in different array indexes.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("summary");
+  }
+
+  if (templateSettings.notes?.enabled) {
+    properties.notes = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description: "A comprehensive list of notes from the meeting.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("notes");
+  }
+
+  if (templateSettings.action_items?.enabled) {
+    properties.action_items = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description:
+            "An in-depth, detailed list of action items identified during the meeting.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("action_items");
+  }
+
+  if (templateSettings.key_topics?.enabled) {
+    properties.key_topics = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description:
+            "An in-depth, detailed list of key topics discussed in the meeting. Leaves no stone unturned.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("key_topics");
+  }
+
+  if (templateSettings.decisions?.enabled) {
+    properties.decisions = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description:
+            "A list of each and every decision/agreement made during the meeting.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("decisions");
+  }
+
+  if (templateSettings.next_steps?.enabled) {
+    properties.next_steps = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description: "A list of next steps agreed upon in the meeting.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("next_steps");
+  }
+
+  if (templateSettings.improvements?.enabled) {
+    properties.improvements = {
+      type: "object",
+      required: ["value"],
+      properties: {
+        value: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description:
+            "A list of suggested improvements following the meeting. These improvements are on how the meeting could've gone better.",
+        },
+      },
+      additionalProperties: false,
+    };
+    required.push("improvements");
+  }
+
+  if (templateSettings.vibe?.enabled) {
+    properties.vibe = {
+      type: "string",
+      description: "The general vibe or atmosphere of the meeting.",
+    };
+    required.push("vibe");
+  }
+
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: [
-          {
-            text: "You are an expert meeting assistant specializing in creating clear, comprehensive, and actionable meeting summaries.",
-            type: "text",
-          },
-        ],
-      },
-      {
-        role: "user",
-        content: [
-          {
-            text: `Transcript: ${transcript}`,
-            type: "text",
-          },
-        ],
-      },
-    ],
+    messages: messages,
     temperature: 1,
     max_tokens: 16383,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
-    response_format: {
-      type: "json_schema",
-      json_schema: {
-        name: "meeting_summary",
-        schema: {
-          type: "object",
-          required: [
-            "summary",
-            "notes",
-            "action_items",
-            "key_topics",
-            "decisions",
-            "next_steps",
-            "improvements",
-            "vibe",
-          ],
-          properties: {
-            summary: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "A long, very detailed summary of the meeting. Split paragraphs in different array indexes.",
-                },
-              },
-              additionalProperties: false,
-            },
-            notes: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "A comprehensive list of notes from the meeting.",
-                },
-              },
-              additionalProperties: false,
-            },
-            action_items: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "An in-depth, detailed list of action items identified during the meeting.",
-                },
-              },
-              additionalProperties: false,
-            },
-            key_topics: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "An in-depth, detailed list of key topics discussed in the meeting. Leaves no stone unturned.",
-                },
-              },
-              additionalProperties: false,
-            },
-            decisions: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "A list of each and every decision/agreement made during the meeting.",
-                },
-              },
-              additionalProperties: false,
-            },
-            next_steps: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "A list of next steps agreed upon in the meeting.",
-                },
-              },
-              additionalProperties: false,
-            },
-            improvements: {
-              type: "object",
-              required: ["value"],
-              properties: {
-                value: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  description:
-                    "A list of suggested improvements following the meeting. These improvements are on how the meeting could've gone better.",
-                },
-              },
-              additionalProperties: false,
-            },
-            vibe: {
-              type: "string",
-              description: "The general vibe or atmosphere of the meeting.",
-            },
-          },
-          additionalProperties: false,
-        },
-        strict: true,
-      },
-    },
+    response_format: responseFormat,
   });
 
   const summary = completion.choices[0].message.content;

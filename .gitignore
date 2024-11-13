@@ -3,7 +3,7 @@ backend/uploads*
 backend/utils/firebase/config.ts
 
 # Configs
-backend/utils/firebase/config.ts
+backend/utils/config.ts
 
 # Profiles
 backend/profiles/*

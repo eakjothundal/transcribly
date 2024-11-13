@@ -11,8 +11,8 @@ export type Template = {
 };
 
 export type TemplateSetting = {
-  description: string;
   enabled: boolean;
+  description: string;
   instructions: string;
 };
 
