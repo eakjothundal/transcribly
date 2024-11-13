@@ -5,6 +5,8 @@ import classes from "./Home.module.css";
 import { useState } from "react";
 import { Meeting } from "../../interfaces/meetings/meetings";
 
+import { summarizeAndTranscribe } from "../../utils/summarize";
+
 interface UploadAreaProps {
   setSummary: (summary: Partial<Meeting>) => void;
   setTranscript: (transcript: string) => void;
@@ -18,25 +20,28 @@ export function UploadArea(props: UploadAreaProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const uploadFile = async (file: File) => {
+    if (!templateID) {
+      console.error("No template ID provided");
+      return;
+    }
+
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const response = await summarizeAndTranscribe(file, templateID);
 
-    console.log("starting");
+    if (!response) {
+      console.error("No response from summarizeAndTranscribe");
+      return;
+    }
 
-    const response = await fetch(
-      `http://localhost:3055/api/summarize?template=${templateID}`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    )
-      .then((res) => res.json())
-      .finally(() => setLoading(false));
+    setTranscript(response.transcript);
+    if (response.summary) {
+      setSummary(JSON.parse(response.summary));
+    } else {
+      console.error("Summary is null");
+    }
 
-    setTranscript(response.res.transcript);
-    setSummary(JSON.parse(response.res.summary));
+    setLoading(false);
   };
 
   return (

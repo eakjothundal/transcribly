@@ -10,18 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@deepgram/sdk": "^3.9.0",
     "@mantine/core": "^7.13.5",
     "@mantine/dates": "^7.13.5",
     "@mantine/dropzone": "^7.13.5",
     "@mantine/hooks": "^7.13.5",
-    "dayjs": "^1.11.13",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.45.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "fs": "^0.0.1-security",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
     "lucide-react": "^0.445.0",
+    "openai": "^4.72.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1"
