@@ -9,6 +9,7 @@ import classes from "./NewMeeting.module.css";
 import { Template } from "../../../interfaces/templates/templates";
 import { Project } from "../../../interfaces/projects";
 import { UploadArea } from "../../Home/UploadArea";
+import { addMeeting } from "../../../utils/supabase/db/meetings";
 
 export function NewMeeting() {
   const [addingMeeting, setAddingMeeting] = useState<boolean>(false);
@@ -76,7 +77,32 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
   );
 
   // Add Meeting
-  const handleSaveMeeting = useCallback(async () => {}, []);
+  const handleSaveMeeting = useCallback(async () => {
+    if (
+      !selectedProject ||
+      !selectedTemplate ||
+      !meetingName ||
+      meetingName === "" ||
+      !summary
+    )
+      return;
+
+    addMeeting({
+      meeting_name: meetingName,
+      project_id: selectedProject!,
+      template_id: selectedTemplate!,
+      meeting_date: meetingDateAndTime,
+      added_context: addedContext,
+      summary: summary,
+    });
+  }, [
+    meetingName,
+    selectedProject,
+    selectedTemplate,
+    meetingDateAndTime,
+    addedContext,
+    summary,
+  ]);
 
   return (
     <Modal
@@ -155,7 +181,11 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
 
         {/* ADD PROJECT BUTTON */}
         <Box className={classes.addMeetingButton}>
-          <Button variant="gradient" disabled={!summary}>
+          <Button
+            variant="gradient"
+            disabled={!summary}
+            onClick={handleSaveMeeting}
+          >
             Add Meeting
           </Button>
         </Box>

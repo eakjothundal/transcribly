@@ -13,8 +13,8 @@ type ListField = {
 };
 
 export type Meeting = {
-  meeting_id: string;
-  user_id: string;
+  meeting_id?: string; // autoset in the database
+  user_id?: string; // user_id is set at the addMeeting function
   project_id: string;
   template_id: string;
   meeting_name: string;
@@ -29,6 +29,5 @@ export type Meeting = {
   next_steps?: ListField;
   improvements?: ListField;
   vibe?: string;
-  created_at: string;
-  updated_at: string;
+  updated_at?: string; // autoset in the database initially, updated by the user on edit
 };
