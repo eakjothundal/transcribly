@@ -124,8 +124,6 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
         return;
       }
 
-      console.log("Transcript: ", response.transcript);
-
       const parsedSummary: Partial<Meeting> = JSON.parse(
         response.summary || "{}"
       );

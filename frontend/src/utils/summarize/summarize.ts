@@ -15,20 +15,15 @@ export const summarizeAndTranscribe = async (
   projectID: string,
   addedContext: string
 ) => {
-  console.log("templateID: ", templateID);
   const template = await getTemplate(templateID);
   const project = await getProject(projectID);
 
-  if (template && template.length > 0) {
-    console.log("Template:   ", template[0]);
-  } else {
+  if (!template || template.length < 1) {
     console.error("Template is null or empty");
     return;
   }
 
-  if (project && project.length > 0) {
-    console.log("Project:   ", project[0]);
-  } else {
+  if (!project || project.length < 1) {
     console.error("Project is null or empty");
     return;
   }
@@ -38,18 +33,17 @@ export const summarizeAndTranscribe = async (
   const transcript = await transcribe(audioFile);
 
   if (transcript) {
-    console.log("-------- Summarizing --------");
+    console.log("Starting summarization...");
     const summary = await summarizeTranscript(
       transcript,
       template[0],
       project[0],
       addedContext
     );
-    console.log("Summary:   ", summary);
     return { transcript, summary };
+  } else {
+    console.error("No transcript");
   }
-
-  console.error("No transcript");
 };
 
 type JSONSchemaProperty = {
