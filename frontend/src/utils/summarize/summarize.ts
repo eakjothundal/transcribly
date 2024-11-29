@@ -1,20 +1,35 @@
 import OpenAI from "openai";
 
 import { getTemplate } from "../supabase/db/templates";
+import { getProject } from "../supabase/db/projects";
 
-import { TemplateSettings } from "../../interfaces/templates/templates.ts";
+import {
+  Template,
+  TemplateSettings,
+} from "../../interfaces/templates/templates.ts";
+import { Project } from "../../interfaces/projects/projects.ts";
 
 export const summarizeAndTranscribe = async (
   audioFile: File,
-  templateID: string
+  templateID: string,
+  projectID: string,
+  addedContext: string
 ) => {
   console.log("templateID: ", templateID);
   const template = await getTemplate(templateID);
+  const project = await getProject(projectID);
 
   if (template && template.length > 0) {
-    console.log("Template:   ", template[0].template_settings);
+    console.log("Template:   ", template[0]);
   } else {
     console.error("Template is null or empty");
+    return;
+  }
+
+  if (project && project.length > 0) {
+    console.log("Project:   ", project[0]);
+  } else {
+    console.error("Project is null or empty");
     return;
   }
 
@@ -26,7 +41,9 @@ export const summarizeAndTranscribe = async (
     console.log("-------- Summarizing --------");
     const summary = await summarizeTranscript(
       transcript,
-      template[0].template_settings
+      template[0],
+      project[0],
+      addedContext
     );
     console.log("Summary:   ", summary);
     return { transcript, summary };
@@ -46,8 +63,19 @@ type JSONSchemaProperty = {
 
 const summarizeTranscript = async (
   transcript: string,
-  templateSettings: TemplateSettings
+  template: Template,
+  project: Project,
+  addedContext: string
 ) => {
+  // Extract template information
+  const templateName = template.template_name;
+  const templateDefinition = template.template_definition;
+  const templateSettings: TemplateSettings = template.template_settings;
+
+  // Extract project information
+  const projectName = project.project_name;
+  const projectDescription = project.project_description;
+
   const openai = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
     project: import.meta.env.VITE_OPENAI_PROJECT_KEY,
@@ -62,7 +90,7 @@ const summarizeTranscript = async (
     },
     {
       role: "user",
-      content: `Transcript: ${transcript}`,
+      content: `Template Name: ${templateName}\nTemplate Definition: ${templateDefinition}\nProject Name: ${projectName}\nProject Description: ${projectDescription}\nAdditional Context: ${addedContext}\n\nTranscript: ${transcript}`,
     },
   ];
 

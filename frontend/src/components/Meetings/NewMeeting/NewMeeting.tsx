@@ -10,6 +10,8 @@ import { Template } from "../../../interfaces/templates/templates";
 import { Project } from "../../../interfaces/projects";
 import { UploadArea } from "../../Home/UploadArea";
 import { addMeeting } from "../../../utils/supabase/db/meetings";
+
+import { summarizeAndTranscribe } from "../../../utils/summarize";
 import { Meeting } from "../../../interfaces/meetings/meetings";
 
 export function NewMeeting() {
@@ -41,21 +43,24 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
 
   // MEETING FIELD STATES
   const [meetingName, setMeetingName] = useState<string | undefined>(undefined);
-  const [selectedTemplate, setSelectedTemplate] = useState<
+  const [selectedTemplateId, setSelectedTemplateId] = useState<
     string | undefined
   >();
-  const [selectedProject, setSelectedProject] = useState<string | undefined>();
+  const [selectedProjectId, setSelectedProjectId] = useState<
+    string | undefined
+  >();
   const [addedContext, setAddedContext] = useState<string>("");
   // meeting date as timestampz to work with postgresql
   const [meetingDateAndTime, setMeetingDateAndTime] = useState<string>(
     new Date().toISOString()
   );
-  const [transcript, setTranscript] = useState<string | null>(null);
-  const [summary, setSummary] = useState<Partial<Meeting> | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   // Fetch states
   const [templates, setTemplates] = useState<Template[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch all templates
   useEffect(() => {
@@ -73,49 +78,101 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
     fetchProjects();
   }, []);
 
-  const disableUpload = useMemo(
-    () => !meetingName || !selectedTemplate || !selectedProject,
-    [meetingName, selectedTemplate, selectedProject]
+  const disableSave = useMemo(
+    () =>
+      !meetingName ||
+      !selectedTemplateId ||
+      !selectedProjectId ||
+      !uploadedFile,
+    [meetingName, selectedTemplateId, selectedProjectId, uploadedFile]
   );
 
-  // Add Meeting
-  const handleSaveMeeting = useCallback(async () => {
-    if (
-      !selectedProject ||
-      !selectedTemplate ||
-      !meetingName ||
-      meetingName === "" ||
-      !transcript ||
-      !summary
-    )
+  // Upload File
+  const summarize = useCallback(async () => {
+    if (!uploadedFile) {
+      console.error("No file uploaded");
       return;
+    }
 
-    await addMeeting({
-      meeting_name: meetingName,
-      project_id: selectedProject!,
-      template_id: selectedTemplate!,
-      meeting_date: meetingDateAndTime,
-      added_context: addedContext,
-      transcript: transcript,
-      summary: summary.summary,
-      notes: summary.notes ? summary.notes : null,
-      action_items: summary.action_items ? summary.action_items : null,
-      key_topics: summary.key_topics ? summary.key_topics : null,
-      decisions: summary.decisions ? summary.decisions : null,
-      next_steps: summary.next_steps ? summary.next_steps : null,
-      improvements: summary.improvements ? summary.improvements : null,
-      vibe: summary.vibe ? summary.vibe : null,
-    });
+    if (!selectedTemplateId) {
+      console.error("No template ID provided");
+      return;
+    }
 
-    closeModal();
+    if (!selectedProjectId) {
+      console.error("No project ID provided");
+      return;
+    }
+
+    if (!meetingName) {
+      console.error("No meeting name provided");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await summarizeAndTranscribe(
+        uploadedFile,
+        selectedTemplateId,
+        selectedProjectId,
+        addedContext
+      );
+
+      if (!response) {
+        console.error("No response from summarizeAndTranscribe");
+        return;
+      }
+
+      console.log("Transcript: ", response.transcript);
+
+      const parsedSummary: Partial<Meeting> = JSON.parse(
+        response.summary || "{}"
+      );
+
+      // Save the meeting only if transcript and summary are available
+      if (response.transcript && response.summary) {
+        await addMeeting({
+          meeting_name: meetingName,
+          project_id: selectedProjectId,
+          template_id: selectedTemplateId,
+          meeting_date: meetingDateAndTime,
+          added_context: addedContext,
+          transcript: response.transcript,
+          summary: JSON.parse(response.summary).summary,
+          notes: parsedSummary.notes ? parsedSummary.notes : null,
+          action_items: parsedSummary.action_items
+            ? parsedSummary.action_items
+            : null,
+          key_topics: parsedSummary.key_topics
+            ? parsedSummary.key_topics
+            : null,
+          decisions: parsedSummary.decisions ? parsedSummary.decisions : null,
+          next_steps: parsedSummary.next_steps
+            ? parsedSummary.next_steps
+            : null,
+          improvements: parsedSummary.improvements
+            ? parsedSummary.improvements
+            : null,
+          vibe: parsedSummary.vibe ? parsedSummary.vibe : null,
+        });
+
+        closeModal();
+      } else {
+        console.error("Transcript or summary missing after summarization.");
+      }
+    } catch (error) {
+      console.error("Error during summarization or saving meeting:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [
-    meetingName,
-    selectedProject,
-    selectedTemplate,
-    meetingDateAndTime,
+    uploadedFile,
+    selectedTemplateId,
+    selectedProjectId,
     addedContext,
-    summary,
-    transcript,
+    meetingName,
+    meetingDateAndTime,
     closeModal,
   ]);
 
@@ -158,8 +215,8 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
             value: project.project_id,
             label: project.project_name,
           }))}
-          value={selectedProject}
-          onChange={(value) => value && setSelectedProject(value)}
+          value={selectedProjectId}
+          onChange={(value) => value && setSelectedProjectId(value)}
           required
           withAsterisk
         />
@@ -172,8 +229,8 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
             value: template.template_id,
             label: template.template_name,
           }))}
-          value={selectedTemplate}
-          onChange={(value) => value && setSelectedTemplate(value)}
+          value={selectedTemplateId}
+          onChange={(value) => value && setSelectedTemplateId(value)}
           required
           withAsterisk
         />
@@ -191,20 +248,16 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
 
         {/* UPLOAD */}
         <Box className={classes.uploadAudioArea}>
-          <UploadArea
-            setSummary={setSummary}
-            setTranscript={setTranscript}
-            disabled={disableUpload}
-            templateID={selectedTemplate}
-          />
+          <UploadArea setUploadedFile={setUploadedFile} />
         </Box>
 
         {/* ADD PROJECT BUTTON */}
         <Box className={classes.addMeetingButton}>
           <Button
             variant="gradient"
-            disabled={!summary}
-            onClick={handleSaveMeeting}
+            disabled={disableSave || loading}
+            onClick={summarize}
+            loading={loading}
           >
             Add Meeting
           </Button>
