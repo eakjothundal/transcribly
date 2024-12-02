@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@deepgram/sdk": "^3.7.0",
+    "ag-grid-react": "^32.3.3",
     "axios": "^1.7.7",
     "openai": "^4.63.0",
     "react-router-dom": "^7.0.1"
