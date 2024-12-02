@@ -13,7 +13,7 @@ import {
 import { supabase } from "./utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
-import { Login } from "./components/Auth/Login";
+import { Login } from "./pages/Login";
 import { Home } from "./components/Home";
 
 import { useEffect, useState } from "react";
@@ -22,10 +22,12 @@ function App() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
+    // Get the current session from Supabase and set it in state
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
 
+    // Subscribe to authentication state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {

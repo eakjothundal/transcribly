@@ -6,15 +6,18 @@ import { AddProject } from "../Projects";
 import { AddTemplate } from "../Templates";
 import { NewMeeting } from "../Meetings";
 import { LogoutButton } from "../Auth/LogoutButton/LogoutButton";
+import { Page } from "../ui/Page";
 
 export function Home() {
   return (
-    <Stack align="center" className={classes.home}>
-      <AddProject />
-      <AddTemplate />
-      <NewMeeting />
+    <Page>
+      <Stack align="center" className={classes.home}>
+        <AddProject />
+        <AddTemplate />
+        <NewMeeting />
 
-      <LogoutButton />
-    </Stack>
+        <LogoutButton />
+      </Stack>
+    </Page>
   );
 }
