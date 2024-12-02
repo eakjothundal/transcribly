@@ -60,7 +60,7 @@ export function Projects() {
       <Box className={classes.container}>
         {/* ADD PROJECT */}
         <Box className={classes.addProject}>
-          <AddProject />
+          <AddProject fetchProjects={fetchProjects} />
         </Box>
 
         {/* TABLE */}

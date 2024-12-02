@@ -5,7 +5,13 @@ import { addProject } from "../../../utils/supabase/db";
 
 import classes from "./AddProject.module.css";
 
-export function AddProject() {
+export interface AddProjectProps {
+  fetchProjects?: () => void;
+}
+
+export function AddProject(props: AddProjectProps) {
+  const { fetchProjects } = props;
+
   const [addingProject, setAddingProject] = useState<boolean>(false);
 
   return (
@@ -23,6 +29,7 @@ export function AddProject() {
       <AddProject.AddProjectModal
         opened={addingProject}
         closeModal={() => setAddingProject(false)}
+        fetchProjects={fetchProjects}
       />
     </Box>
   );
@@ -31,24 +38,30 @@ export function AddProject() {
 export interface AddProjectModalProps {
   opened: boolean;
   closeModal: () => void;
+  fetchProjects?: () => void;
 }
 
 AddProject.AddProjectModal = function AddProjectModal(
   props: AddProjectModalProps
 ) {
-  const { opened, closeModal } = props;
+  const { opened, closeModal, fetchProjects } = props;
 
   const [projectName, setProjectName] = useState<string | undefined>(undefined);
   const [projectDescription, setProjectDescription] = useState<
     string | undefined
   >(undefined);
 
-  const handleAddProject = useCallback(() => {
+  const handleAddProject = useCallback(async () => {
     if (projectName && projectDescription) {
-      addProject(projectName, projectDescription);
+      await addProject(projectName, projectDescription);
+
+      if (fetchProjects) {
+        fetchProjects();
+      }
+
       closeModal();
     }
-  }, [projectName, projectDescription, closeModal]);
+  }, [projectName, projectDescription, closeModal, fetchProjects]);
 
   return (
     <Modal
