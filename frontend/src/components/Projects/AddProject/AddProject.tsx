@@ -10,7 +10,15 @@ export function AddProject() {
 
   return (
     <Box>
-      <Button onClick={() => setAddingProject(true)}>Add Project</Button>
+      <Button
+        onClick={() => setAddingProject(true)}
+        variant="gradient"
+        gradient={{ from: "blue", to: "violet", deg: 202 }}
+        size="md"
+        radius="md"
+      >
+        Add Project
+      </Button>
 
       <AddProject.AddProjectModal
         opened={addingProject}
