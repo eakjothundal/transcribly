@@ -1,16 +1,10 @@
-import { supabase } from "../../../utils/supabase";
-
+// LogoutButton.tsx
 import { Button } from "@mantine/core";
+import { supabase } from "../../../utils/supabase";
 
 export function LogoutButton() {
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("Error logging out:", error.message);
-    } else {
-      console.log("Logged out successfully");
-    }
+    await supabase.auth.signOut();
   };
 
   return (
