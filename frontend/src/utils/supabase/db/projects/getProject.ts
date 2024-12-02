@@ -10,5 +10,5 @@ export const getProject = async (projectID: string) => {
     console.error("Error fetching projects: ", error.message);
   }
 
-  return project;
+  return project ? project[0] : null;
 };
