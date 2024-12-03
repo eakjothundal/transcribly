@@ -3,7 +3,7 @@ import {
   getAllTemplates,
   getTemplate,
   updateTemplate,
-  //   deleteProject,
+  deleteTemplate,
 } from "../../utils/supabase/db/templates";
 
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
