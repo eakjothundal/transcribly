@@ -10,5 +10,5 @@ export const getTemplate = async (templateID: string) => {
     console.error("Error fetching templates: ", error.message);
   }
 
-  return template;
+  return template ? template[0] : null;
 };

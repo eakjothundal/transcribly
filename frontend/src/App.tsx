@@ -18,9 +18,10 @@ import { Home } from "./components/Home";
 
 import { useEffect, useState } from "react";
 import { Projects } from "./pages/Projects";
+import { Templates } from "./pages/Templates";
 
 function App() {
-  const [session, setSession] = useState<Session | null | undefined>(undefined); // Use `undefined` to indicate loading
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
   useEffect(() => {
     // Get the current session from Supabase and set it in state
@@ -41,11 +42,6 @@ function App() {
     };
   }, []);
 
-  // Show a loading screen while the session is being initialized
-  if (session === undefined) {
-    return <div>Loading...</div>; // TODO: Replace with a loading spinner/component
-  }
-
   return (
     <MantineProvider>
       <Router>
@@ -55,11 +51,19 @@ function App() {
             path="/login"
             element={!session ? <Login /> : <Navigate to="/" replace />}
           />
+
           {/* Protected Route: Projects */}
           <Route
             path="/projects"
             element={session ? <Projects /> : <Navigate to="/login" replace />}
           />
+
+          {/* Protected Route: Templates */}
+          <Route
+            path="/templates"
+            element={session ? <Templates /> : <Navigate to="/login" replace />}
+          />
+
           {/* Protected Route: Home */}
           <Route
             path="/"
