@@ -53,7 +53,6 @@ export function Templates() {
   }
 
   const columnDefs: ColDef<Template>[] = [
-    { field: "template_id", headerName: "Template ID", width: 320 }, // TODO: template ID doesn't need to be displayed to the user. Remove this column after dev.
     { field: "template_name", headerName: "Template Name", width: 350 },
     {
       field: "template_definition",
