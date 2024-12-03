@@ -6,7 +6,7 @@ export const updateTemplate = async (
   updatedTemplateColumns: Partial<Template>
 ) => {
   const { error } = await supabase
-    .from("Templates")
+    .from("templates")
     .update({ ...updatedTemplateColumns, updated_at: new Date() })
     .eq("template_id", templateID);
 
