@@ -10,12 +10,22 @@ import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
-import { Box, Button, Modal, Textarea, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Modal,
+  Textarea,
+  TextInput,
+  Tooltip,
+  Text,
+} from "@mantine/core";
 import { Page } from "../../components/ui/Page";
 
 import classes from "./Templates.module.css";
-import { Template } from "../../interfaces/templates/templates";
+import { Template, TemplateSettings } from "../../interfaces/templates";
 import { AddTemplate } from "../../components/Templates";
+import { MeetingSummaryOptions } from "../../interfaces/meetings";
 
 export function Templates() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -43,7 +53,7 @@ export function Templates() {
   }
 
   const columnDefs: ColDef<Template>[] = [
-    { field: "template_id", headerName: "Template ID", width: 350 }, // TODO: template ID doesn't need to be displayed to the user. Remove this column after dev.
+    { field: "template_id", headerName: "Template ID", width: 320 }, // TODO: template ID doesn't need to be displayed to the user. Remove this column after dev.
     { field: "template_name", headerName: "Template Name", width: 350 },
     {
       field: "template_definition",
@@ -106,6 +116,9 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
   const [templateDefinition, setTemplateDefinition] = useState<
     string | undefined
   >(undefined);
+  const [templateSettings, setTemplateSettings] = useState<
+    TemplateSettings | undefined
+  >(undefined);
 
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
 
@@ -117,6 +130,7 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
         setSelectedTemplate(template || null);
         setTemplateName(template?.template_name);
         setTemplateDefinition(template?.template_definition);
+        setTemplateSettings(template?.template_settings);
       }
     }
 
@@ -135,6 +149,19 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
       updates.template_definition = templateDefinition;
     }
 
+    if (templateSettings) {
+      const settings: TemplateSettings = Object.keys(templateSettings).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: {
+            ...templateSettings[key as MeetingSummaryOptions],
+          },
+        }),
+        {} as TemplateSettings
+      );
+      updates.template_settings = settings;
+    }
+
     // Only call updateTemplate if there are changes to be saved
     if (Object.keys(updates).length > 0) {
       console.log("Updating template with:", updates);
@@ -151,6 +178,7 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
     templateDefinition,
     templateID,
     templateName,
+    templateSettings,
   ]);
 
   return (
@@ -182,6 +210,68 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
           maxRows={6}
           disabled={!selectedTemplate}
         />
+
+        {/* SETTINGS */}
+        <Box>
+          <Box>
+            <Text>Choose which fields to include in the template:</Text>
+          </Box>
+          {templateSettings &&
+            Object.keys(templateSettings).map((key) => {
+              const settingKey = key as MeetingSummaryOptions;
+              const setting = templateSettings[settingKey];
+
+              // Capitalize the first letter and replace underscores
+              const label =
+                settingKey.charAt(0).toUpperCase() +
+                settingKey.slice(1).replace(/_/g, " ");
+
+              return (
+                <Box key={settingKey}>
+                  <Tooltip
+                    label={setting.description}
+                    withArrow
+                    position="left"
+                  >
+                    <Checkbox
+                      label={`${label}`}
+                      checked={setting.enabled}
+                      onChange={(event) =>
+                        setTemplateSettings({
+                          ...templateSettings,
+                          [settingKey]: {
+                            ...setting,
+                            enabled: event.currentTarget.checked,
+                          },
+                        })
+                      }
+                    />
+                  </Tooltip>
+
+                  {setting.enabled && (
+                    <Textarea
+                      label={`Instructions for ${label}`}
+                      placeholder={`Provide specific instructions for ${label.toLowerCase()}`}
+                      value={setting.instructions}
+                      onChange={(event) =>
+                        setTemplateSettings({
+                          ...templateSettings,
+                          [settingKey]: {
+                            ...setting,
+                            instructions: event.currentTarget.value,
+                          },
+                        })
+                      }
+                      autosize
+                      minRows={2}
+                      maxRows={4}
+                      mt="xs"
+                    />
+                  )}
+                </Box>
+              );
+            })}
+        </Box>
 
         {/* TEMPLATE BUTTONS */}
         <Box className={classes.updateTemplateButtons}>

@@ -43,7 +43,7 @@ export function Projects() {
   }
 
   const columnDefs: ColDef<Project>[] = [
-    { field: "project_id", headerName: "Project ID", width: 350 }, // TODO: project ID doesn't need to be displayed to the user. Remove this column after dev.
+    { field: "project_id", headerName: "Project ID", width: 300 }, // TODO: project ID doesn't need to be displayed to the user. Remove this column after dev.
     { field: "project_name", headerName: "Project Name", width: 350 },
     {
       field: "project_description",
