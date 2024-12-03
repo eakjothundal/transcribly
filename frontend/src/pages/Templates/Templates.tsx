@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   getAllTemplates,
   getTemplate,
-  //   updateProject,
+  updateTemplate,
   //   deleteProject,
 } from "../../utils/supabase/db/templates";
 
