@@ -22,7 +22,15 @@ export function AddTemplate() {
 
   return (
     <Box>
-      <Button onClick={() => setAddingTemplate(true)}>Add Template</Button>
+      <Button
+        onClick={() => setAddingTemplate(true)}
+        variant="gradient"
+        gradient={{ from: "blue", to: "violet", deg: 202 }}
+        size="md"
+        radius="md"
+      >
+        Add Template
+      </Button>
 
       <AddTemplate.AddTemplateModal
         opened={addingTemplate}

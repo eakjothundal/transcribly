@@ -1,5 +1,23 @@
+.pageContainer {
+  display: flex;
+}
+
+.sidebarContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 1rem 3rem;
+  border-right: 1px solid #e0e0e0;
+}
+
 .nav {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
+}
+
+.pageContent {
+  width: 100%;
+  padding: 3rem;
 }
