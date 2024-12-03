@@ -63,7 +63,7 @@ export function Templates() {
   return (
     <Page>
       <Box className={classes.container}>
-        {/* ADD Template */}
+        {/* ADD TEMPLATE */}
         <Box className={classes.addTemplate}>
           <AddTemplate />
         </Box>
@@ -198,7 +198,7 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
           disabled={!selectedTemplate}
         />
 
-        {/* DESCRIPTION */}
+        {/* DEFINITION */}
         <Textarea
           label="Template Definition"
           description="This will be used as extra context in summarization, so try to be detailed here."
