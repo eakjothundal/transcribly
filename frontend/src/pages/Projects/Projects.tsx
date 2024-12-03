@@ -38,11 +38,7 @@ export function Projects() {
     fetchProjects();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (projects.length === 0) {
+  if (projects.length === 0 && !loading) {
     return <div>No projects found.</div>;
   }
 

@@ -29,8 +29,8 @@ export function Page({ children }: PageProps) {
           Projects
         </Button>
         <Button
-          onClick={() => navigate("/")}
-          variant={location.pathname === "/" ? "filled" : "outline"}
+          onClick={() => navigate("/templates")}
+          variant={location.pathname === "/templates" ? "filled" : "outline"}
         >
           Templates
         </Button>

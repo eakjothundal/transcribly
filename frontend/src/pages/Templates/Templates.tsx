@@ -38,11 +38,7 @@ export function Templates() {
     fetchTemplates();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (templates.length === 0) {
+  if (templates.length === 0 && !loading) {
     return <div>No templates found.</div>;
   }
 
