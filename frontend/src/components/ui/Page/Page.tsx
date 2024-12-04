@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { LogoutButton } from "../../Auth/LogoutButton";
 
 import classes from "./Page.module.css";
-import { LogoutButton } from "../../Auth/LogoutButton/LogoutButton";
 
 interface PageProps {
   children: React.ReactNode;
