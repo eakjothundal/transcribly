@@ -18,6 +18,8 @@ import { Home } from "./components/Home";
 
 import { useEffect, useState } from "react";
 import { Projects } from "./pages/Projects";
+import { Meetings } from "./pages/Meetings";
+import { Templates } from "./pages/Templates";
 
 function App() {
   const [session, setSession] = useState<Session | null | undefined>(undefined); // Use `undefined` to indicate loading
@@ -55,11 +57,25 @@ function App() {
             path="/login"
             element={!session ? <Login /> : <Navigate to="/" replace />}
           />
+
+          {/* Protected Route: Meetings */}
+          <Route
+            path="/meetings"
+            element={session ? <Meetings /> : <Navigate to="/login" replace />}
+          />
+
           {/* Protected Route: Projects */}
           <Route
             path="/projects"
             element={session ? <Projects /> : <Navigate to="/login" replace />}
           />
+
+          {/* Protected Route: Projects */}
+          <Route
+            path="/templates"
+            element={session ? <Templates /> : <Navigate to="/login" replace />}
+          />
+
           {/* Protected Route: Home */}
           <Route
             path="/"
