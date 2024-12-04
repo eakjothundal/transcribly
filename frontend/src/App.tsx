@@ -18,11 +18,11 @@ import { Home } from "./components/Home";
 
 import { useEffect, useState } from "react";
 import { Projects } from "./pages/Projects";
-import { Meetings } from "./pages/Meetings";
 import { Templates } from "./pages/Templates";
+import { Meetings } from "./pages/Meetings";
 
 function App() {
-  const [session, setSession] = useState<Session | null | undefined>(undefined); // Use `undefined` to indicate loading
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
   useEffect(() => {
     // Get the current session from Supabase and set it in state
@@ -42,11 +42,6 @@ function App() {
       subscription.unsubscribe();
     };
   }, []);
-
-  // Show a loading screen while the session is being initialized
-  if (session === undefined) {
-    return <div>Loading...</div>; // TODO: Replace with a loading spinner/component
-  }
 
   return (
     <MantineProvider>
@@ -70,7 +65,7 @@ function App() {
             element={session ? <Projects /> : <Navigate to="/login" replace />}
           />
 
-          {/* Protected Route: Projects */}
+          {/* Protected Route: Templates */}
           <Route
             path="/templates"
             element={session ? <Templates /> : <Navigate to="/login" replace />}

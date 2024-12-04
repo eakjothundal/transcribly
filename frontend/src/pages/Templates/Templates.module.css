@@ -4,13 +4,13 @@
   gap: 1rem;
 }
 
-.addProject {
+.addTemplate {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.updateProjectButtons {
+.updateTemplateButtons {
   display: flex;
   justify-content: space-between;
 }
@@ -21,7 +21,7 @@
   margin-top: 1rem;
 }
 
-.updateProjectModalContent {
+.updateTemplateModalContent {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
