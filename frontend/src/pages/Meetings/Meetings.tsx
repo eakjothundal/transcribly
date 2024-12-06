@@ -111,18 +111,20 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
 
   const { meeting_name } = selectedMeeting || {};
 
+  const { summary } = selectedMeeting || {};
+
   return (
     <Modal
       title={meeting_name}
       opened={opened && !!selectedMeeting}
       onClose={closeModal}
-      size="xxl"
+      size="80%"
       radius="md"
     >
       <Box className={classes.updateProjectModalContent}>
         {/* SUMMARY */}
         <Box>
-          <Summary summaryItems={selectedMeeting?.summary?.value} />
+          <Summary items={summary?.value} />
         </Box>
       </Box>
     </Modal>

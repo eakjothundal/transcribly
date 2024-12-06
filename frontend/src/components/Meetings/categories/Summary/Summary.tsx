@@ -1,9 +1,9 @@
 import { Box, Text } from "@mantine/core";
 
-import { SummaryProps } from "./SummaryTypes";
+import { CategoryProps } from "../CategoryTypes";
 
-export function Summary(props: SummaryProps) {
-  const { summaryItems } = props;
+export function Summary(props: CategoryProps) {
+  const { items } = props;
 
   return (
     <Box>
@@ -14,8 +14,8 @@ export function Summary(props: SummaryProps) {
       <Text>
         <ul>
           <Box>
-            {summaryItems?.map((summaryItem, index) => {
-              return <li key={index}>{summaryItem}</li>;
+            {items?.map((item, index) => {
+              return <li key={index}>{item}</li>;
             })}
           </Box>
         </ul>
