@@ -14,7 +14,7 @@ import { NewMeeting } from "../../components/Meetings";
 import { getMeeting } from "../../utils/supabase/db/meetings";
 
 import classes from "./Meetings.module.css";
-import { Summary } from "../../components/Meetings/categories";
+import { Notes, Summary } from "../../components/Meetings/categories";
 
 export function Meetings() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -111,7 +111,7 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
 
   const { meeting_name } = selectedMeeting || {};
 
-  const { summary } = selectedMeeting || {};
+  const { summary, notes } = selectedMeeting || {};
 
   return (
     <Modal
@@ -125,6 +125,11 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
         {/* SUMMARY */}
         <Box>
           <Summary items={summary?.value} />
+        </Box>
+
+        {/* NOTES */}
+        <Box>
+          <Notes items={notes?.value} />
         </Box>
       </Box>
     </Modal>
