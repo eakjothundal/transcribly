@@ -21,7 +21,7 @@ export type Meeting = {
   meeting_date: string;
   added_context?: string;
   transcript?: string;
-  summary?: string;
+  summary?: ListField;
   notes?: ListField | null;
   action_items?: ListField | null;
   key_topics?: ListField | null;

@@ -6,15 +6,23 @@ import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
-import { Box } from "@mantine/core";
+
+import { Box, Modal, Text } from "@mantine/core";
+
 import { Page } from "../../components/ui/Page";
 import { NewMeeting } from "../../components/Meetings";
+import { getMeeting } from "../../utils/supabase/db/meetings";
 
 import classes from "./Meetings.module.css";
+import { Summary } from "../../components/Meetings/categories";
 
 export function Meetings() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [meetingClicked, setMeetingClicked] = useState<
+    Meeting["meeting_id"] | null
+  >(null);
 
   const fetchMeetings = async () => {
     try {
@@ -32,16 +40,16 @@ export function Meetings() {
   }, []);
 
   if (meetings.length === 0 && !loading) {
-    return <div>No meetings found.</div>;
+    return <Text>No meetings found.</Text>;
   }
 
   const columnDefs: ColDef<Meeting>[] = [
     { field: "meeting_name", headerName: "Meeting Title", width: 350 },
-    // {
-    //   field: "meeting_description",
-    //   headerName: "Project Description",
-    //   width: 500,
-    // },
+    {
+      field: "added_context",
+      headerName: "Meeting Context",
+      width: 500,
+    },
   ];
   return (
     <Page>
@@ -56,9 +64,67 @@ export function Meetings() {
           className="ag-theme-quartz" // applying the Data Grid theme
           style={{ height: 500 }} // the Data Grid will fill the size of the parent container
         >
-          <AgGridReact columnDefs={columnDefs} rowData={meetings} />
+          <AgGridReact
+            columnDefs={columnDefs}
+            rowData={meetings}
+            onRowClicked={(event) => {
+              if (event.data) {
+                setMeetingClicked(event.data.meeting_id);
+              }
+            }}
+          />
         </Box>
+
+        {/* VIEW MEETING MODAL */}
+        <Meetings.ViewMeeting
+          opened={!!meetingClicked}
+          closeModal={() => setMeetingClicked(null)}
+          meetingID={meetingClicked || ""}
+        />
       </Box>
     </Page>
   );
 }
+
+export interface ViewMeetingProps {
+  opened: boolean;
+  closeModal: () => void;
+  meetingID: string;
+}
+
+Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
+  const { opened, closeModal, meetingID } = props;
+
+  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+
+  // Fetch project data when the modal opens and projectID changes
+  useEffect(() => {
+    async function fetchProject() {
+      if (meetingID) {
+        const project: Meeting | null = await getMeeting(meetingID);
+        setSelectedMeeting(project || null);
+      }
+    }
+
+    fetchProject();
+  }, [meetingID]);
+
+  const { meeting_name } = selectedMeeting || {};
+
+  return (
+    <Modal
+      title={meeting_name}
+      opened={opened && !!selectedMeeting}
+      onClose={closeModal}
+      size="xxl"
+      radius="md"
+    >
+      <Box className={classes.updateProjectModalContent}>
+        {/* SUMMARY */}
+        <Box>
+          <Summary summaryItems={selectedMeeting?.summary?.value} />
+        </Box>
+      </Box>
+    </Modal>
+  );
+};
