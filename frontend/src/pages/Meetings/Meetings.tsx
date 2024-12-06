@@ -14,7 +14,7 @@ import { NewMeeting } from "../../components/Meetings";
 import { getMeeting } from "../../utils/supabase/db/meetings";
 
 import classes from "./Meetings.module.css";
-import { Notes, Summary } from "../../components/Meetings/categories";
+import { List } from "../../components/Meetings/categories";
 
 export function Meetings() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -124,12 +124,12 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
       <Box className={classes.updateProjectModalContent}>
         {/* SUMMARY */}
         <Box>
-          <Summary items={summary?.value} />
+          <List items={summary?.value} title="Summary" />
         </Box>
 
         {/* NOTES */}
         <Box>
-          <Notes items={notes?.value} />
+          <List items={notes?.value} title="Notes" />
         </Box>
       </Box>
     </Modal>
