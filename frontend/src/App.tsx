@@ -14,7 +14,6 @@ import { supabase } from "./utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
 import { Login } from "./pages/Login";
-import { Home } from "./components/Home";
 
 import { useEffect, useState } from "react";
 import { Projects } from "./pages/Projects";
@@ -50,7 +49,7 @@ function App() {
           {/* Public Route: Login */}
           <Route
             path="/login"
-            element={!session ? <Login /> : <Navigate to="/" replace />}
+            element={!session ? <Login /> : <Navigate to="/meetings" replace />}
           />
 
           {/* Protected Route: Meetings */}
@@ -72,10 +71,7 @@ function App() {
           />
 
           {/* Protected Route: Home */}
-          <Route
-            path="/"
-            element={session ? <Home /> : <Navigate to="/login" replace />}
-          />
+          <Route path="/" element={<Navigate to="/meetings" replace />} />
         </Routes>
       </Router>
     </MantineProvider>
