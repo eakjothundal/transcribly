@@ -250,7 +250,7 @@ const summarizeTranscript = async (
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: messages,
-    temperature: 1.1,
+    temperature: 0.85,
     max_tokens: 16383,
     top_p: 1,
     frequency_penalty: 0,
