@@ -8,7 +8,7 @@ export function List(props: ListCategoryProps) {
   return (
     <Box>
       <Text>
-        <h3>{title}</h3>
+        <h2>{title}</h2>
       </Text>
 
       <Text>
