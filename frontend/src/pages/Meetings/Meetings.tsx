@@ -7,6 +7,8 @@ import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 
+import { format } from "date-fns";
+
 import { Box, Modal } from "@mantine/core";
 
 import { Page } from "../../components/ui/Page";
@@ -41,9 +43,25 @@ export function Meetings() {
     {
       field: "meeting_date",
       headerName: "Meeting Date",
-      width: 200,
+      width: 150,
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        return format(date, "MM/dd/yyyy"); // Format as MM/DD/YYYY
+      },
+    },
+    {
+      field: "meeting_date",
+      headerName: "Meeting Time",
+      width: 150,
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        return format(date, "hh:mm a"); // Format as HH:MM AM/PM
+      },
     },
   ];
+
   return (
     <Page>
       <Box className={classes.container}>
