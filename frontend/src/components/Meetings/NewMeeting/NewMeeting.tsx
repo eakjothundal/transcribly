@@ -8,7 +8,7 @@ import { getAllProjects } from "../../../utils/supabase/db/projects";
 import classes from "./NewMeeting.module.css";
 import { Template } from "../../../interfaces/templates/templates";
 import { Project } from "../../../interfaces/projects";
-import { UploadArea } from "../../Home/UploadArea.tsx";
+import { UploadArea } from "../../Home/UploadArea";
 import { addMeeting } from "../../../utils/supabase/db/meetings";
 
 import { summarizeAndTranscribe } from "../../../utils/summarize";
