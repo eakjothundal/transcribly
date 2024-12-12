@@ -1,8 +1,8 @@
 import { Box, Text } from "@mantine/core";
 
-import { CategoryProps } from "../CategoryTypes";
+import { ListCategoryProps } from "../CategoryTypes";
 
-export function List(props: CategoryProps) {
+export function List(props: ListCategoryProps) {
   const { items, title } = props;
 
   return (
