@@ -10,4 +10,14 @@ export default defineConfig({
     target: "esnext",
   },
   plugins: [react()],
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "@mantine/core",
+      "@mantine/hooks",
+      "@supabase/supabase-js",
+      "axios",
+    ],
+  },
 });
