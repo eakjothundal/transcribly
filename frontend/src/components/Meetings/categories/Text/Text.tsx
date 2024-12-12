@@ -8,7 +8,7 @@ export function Text(props: TextCategoryProps) {
   return (
     <Box>
       <MantineText>
-        <h3>{title}</h3>
+        <h2>{title}</h2>
       </MantineText>
 
       <MantineText>{content}</MantineText>

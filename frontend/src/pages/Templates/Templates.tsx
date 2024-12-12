@@ -205,96 +205,90 @@ Templates.EditTemplate = function EditTemplate(props: EditTemplateProps) {
 
         {/* SETTINGS */}
         <Box>
-          <Box>
-            <Text>Choose which fields to include in the template:</Text>
-          </Box>
-          {templateSettings &&
-            Object.keys(templateSettings).map((key) => {
-              const settingKey = key as MeetingSummaryOptions;
-              const setting = templateSettings[settingKey];
-
-              // Capitalize the first letter and replace underscores
-              const label =
-                settingKey.charAt(0).toUpperCase() +
-                settingKey.slice(1).replace(/_/g, " ");
-
-              return (
-                <Box key={settingKey}>
-                  <Tooltip
-                    label={setting.description}
-                    withArrow
-                    position="left"
-                  >
-                    <Checkbox
-                      label={`${label}`}
-                      checked={setting.enabled}
-                      onChange={(event) =>
-                        setTemplateSettings({
-                          ...templateSettings,
-                          [settingKey]: {
-                            ...setting,
-                            enabled: event.currentTarget.checked,
-                          },
-                        })
-                      }
-                    />
-                  </Tooltip>
-
-                  {setting.enabled && (
-                    <Textarea
-                      label={`Instructions for ${label}`}
-                      placeholder={`Provide specific instructions for ${label.toLowerCase()}`}
-                      value={setting.instructions}
-                      onChange={(event) =>
-                        setTemplateSettings({
-                          ...templateSettings,
-                          [settingKey]: {
-                            ...setting,
-                            instructions: event.currentTarget.value,
-                          },
-                        })
-                      }
-                      autosize
-                      minRows={2}
-                      maxRows={4}
-                      mt="xs"
-                    />
-                  )}
-                </Box>
-              );
-            })}
+          <Text>Choose which fields to include in the template:</Text>
         </Box>
+        {templateSettings &&
+          Object.keys(templateSettings).map((key) => {
+            const settingKey = key as MeetingSummaryOptions;
+            const setting = templateSettings[settingKey];
 
-        {/* TEMPLATE BUTTONS */}
-        <Box className={classes.updateTemplateButtons}>
-          <Button
-            variant="gradient"
-            gradient={{ from: "pink", to: "red", deg: 132 }}
-            onClick={() => {
-              if (selectedTemplate) {
-                setOpenDeleteConfirmation(true);
-              }
-            }}
-          >
-            Delete Template
-          </Button>
+            // Capitalize the first letter and replace underscores
+            const label =
+              settingKey.charAt(0).toUpperCase() +
+              settingKey.slice(1).replace(/_/g, " ");
 
-          <Button variant="gradient" onClick={handleUpdateTemplate}>
-            Save Template
-          </Button>
-        </Box>
+            return (
+              <Box key={settingKey}>
+                <Tooltip label={setting.description} withArrow position="left">
+                  <Checkbox
+                    label={`${label}`}
+                    checked={setting.enabled}
+                    onChange={(event) =>
+                      setTemplateSettings({
+                        ...templateSettings,
+                        [settingKey]: {
+                          ...setting,
+                          enabled: event.currentTarget.checked,
+                        },
+                      })
+                    }
+                  />
+                </Tooltip>
 
-        {/* DELETE CONFIRMATION MODAL */}
-        <Templates.DeleteConfirmation
-          opened={openDeleteConfirmation}
-          closeModal={() => {
-            setOpenDeleteConfirmation(false);
-            closeModal();
-          }}
-          templateID={templateID}
-          fetchTemplates={fetchTemplates}
-        />
+                {setting.enabled && (
+                  <Textarea
+                    label={`Instructions for ${label}`}
+                    placeholder={`Provide specific instructions for ${label.toLowerCase()}`}
+                    value={setting.instructions}
+                    onChange={(event) =>
+                      setTemplateSettings({
+                        ...templateSettings,
+                        [settingKey]: {
+                          ...setting,
+                          instructions: event.currentTarget.value,
+                        },
+                      })
+                    }
+                    autosize
+                    minRows={2}
+                    maxRows={4}
+                    mt="xs"
+                  />
+                )}
+              </Box>
+            );
+          })}
       </Box>
+
+      {/* TEMPLATE BUTTONS */}
+      <Box className={classes.updateTemplateButtons}>
+        <Button
+          variant="gradient"
+          gradient={{ from: "pink", to: "red", deg: 132 }}
+          onClick={() => {
+            if (selectedTemplate) {
+              setOpenDeleteConfirmation(true);
+            }
+          }}
+        >
+          Delete Template
+        </Button>
+
+        <Button variant="gradient" onClick={handleUpdateTemplate}>
+          Save Template
+        </Button>
+      </Box>
+
+      {/* DELETE CONFIRMATION MODAL */}
+      <Templates.DeleteConfirmation
+        opened={openDeleteConfirmation}
+        closeModal={() => {
+          setOpenDeleteConfirmation(false);
+          closeModal();
+        }}
+        templateID={templateID}
+        fetchTemplates={fetchTemplates}
+      />
     </Modal>
   );
 };

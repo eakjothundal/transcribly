@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllMeetings } from "../../utils/supabase/db/meetings";
+import { getProject } from "../../utils/supabase/db/projects";
+import { getTemplate } from "../../utils/supabase/db/templates";
 import { Meeting } from "../../interfaces/meetings";
 
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
@@ -7,7 +9,9 @@ import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 
-import { Box, Modal } from "@mantine/core";
+import { format } from "date-fns";
+
+import { Box, Modal, Text as MantineText } from "@mantine/core";
 
 import { Page } from "../../components/ui/Page";
 import { NewMeeting } from "../../components/Meetings";
@@ -15,6 +19,8 @@ import { getMeeting } from "../../utils/supabase/db/meetings";
 
 import classes from "./Meetings.module.css";
 import { List, Text } from "../../components/Meetings/categories";
+import { Project } from "../../interfaces/projects";
+import { Template } from "../../interfaces/templates";
 
 export function Meetings() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -41,9 +47,25 @@ export function Meetings() {
     {
       field: "meeting_date",
       headerName: "Meeting Date",
-      width: 200,
+      width: 150,
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        return format(date, "MM/dd/yyyy"); // Format as MM/DD/YYYY
+      },
+    },
+    {
+      field: "meeting_date",
+      headerName: "Meeting Time",
+      width: 150,
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        return format(date, "hh:mm a"); // Format as HH:MM AM/PM
+      },
     },
   ];
+
   return (
     <Page>
       <Box className={classes.container}>
@@ -90,6 +112,9 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
 
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
+  const [project_name, setProjectName] = useState<string | null>(null);
+  const [template_name, setTemplateName] = useState<string | null>(null);
+
   // Fetch project data when the modal opens and projectID changes
   useEffect(() => {
     async function fetchProject() {
@@ -102,7 +127,26 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
     fetchProject();
   }, [meetingID]);
 
-  const { meeting_name } = selectedMeeting || {};
+  // Set project name and template name
+  useEffect(() => {
+    async function fetchProjectAndTemplate() {
+      if (selectedMeeting) {
+        const selectedProject: Project = await getProject(
+          selectedMeeting.project_id
+        );
+        const selectedTemplate: Template = await getTemplate(
+          selectedMeeting.template_id
+        );
+
+        setProjectName(selectedProject.project_name);
+        setTemplateName(selectedTemplate.template_name);
+      }
+    }
+
+    fetchProjectAndTemplate();
+  }, [selectedMeeting]);
+
+  const { meeting_name, meeting_date } = selectedMeeting || {};
 
   const {
     summary,
@@ -117,13 +161,34 @@ Meetings.ViewMeeting = function ViewMeeting(props: ViewMeetingProps) {
 
   return (
     <Modal
-      title={meeting_name}
+      title={`Meeting: ${meeting_name}`}
       opened={opened && !!selectedMeeting}
       onClose={closeModal}
       size="80%"
       radius="md"
     >
       <Box className={classes.updateProjectModalContent}>
+        <Box>
+          <MantineText>
+            {/* Date and Time */}
+            {meeting_date && (
+              <h4>
+                Meeting Date:{" "}
+                {meeting_date && format(meeting_date, "MM/dd/yyyy")}
+              </h4>
+            )}
+            {meeting_date && (
+              <h4>Meeting Time: {format(meeting_date, "hh:mm a")}</h4>
+            )}
+
+            {/* Project and Template */}
+            {project_name && project_name !== "None" && (
+              <h4>Project: {project_name}</h4>
+            )}
+            {template_name && <h4>Template: {template_name}</h4>}
+          </MantineText>
+        </Box>
+
         {/* KEY TOPICS */}
         {key_topics && (
           <Box>
