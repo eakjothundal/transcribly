@@ -29,7 +29,6 @@ import { MeetingSummaryOptions } from "../../interfaces/meetings";
 
 export function Templates() {
   const [templates, setTemplates] = useState<Template[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const [templateClicked, setTemplateClicked] = useState<string | null>(null);
 
@@ -39,18 +38,12 @@ export function Templates() {
       setTemplates(data);
     } catch (error) {
       console.error("Error fetching templates:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchTemplates();
   }, []);
-
-  if (templates.length === 0 && !loading) {
-    return <div>No templates found.</div>;
-  }
 
   const columnDefs: ColDef<Template>[] = [
     { field: "template_name", headerName: "Template Name", width: 350 },

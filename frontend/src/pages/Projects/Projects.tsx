@@ -19,7 +19,6 @@ import classes from "./Projects.module.css";
 
 export function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const [projectClicked, setProjectClicked] = useState<string | null>(null);
 
@@ -29,18 +28,12 @@ export function Projects() {
       setProjects(data);
     } catch (error) {
       console.error("Error fetching projects:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  if (projects.length === 0 && !loading) {
-    return <div>No projects found.</div>;
-  }
 
   const columnDefs: ColDef<Project>[] = [
     { field: "project_name", headerName: "Project Name", width: 350 },
