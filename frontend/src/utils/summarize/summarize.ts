@@ -36,8 +36,8 @@ export const summarizeAndTranscribe = async (
     console.log("Starting summarization...");
     const summary = await summarizeTranscript(
       transcript,
-      template[0],
-      project[0],
+      template,
+      project,
       addedContext
     );
     return { transcript, summary };
@@ -80,11 +80,11 @@ const summarizeTranscript = async (
     {
       role: "system",
       content:
-        "You are an expert meeting assistant specializing in creating clear, comprehensive, and actionable meeting summaries.",
+        "You are an expert meeting assistant specializing in creating clear, comprehensive, and actionable meeting summaries. You are provided template information, project information, additional meeting-specific context, and finally the meeting transcript. Your goal is to use the template and project information the same as extra context. Do not repeat the template or project information, or the added context because the user is already aware of it. Your task is to create a detailed meeting summary based on the transcript provided.",
     },
     {
       role: "user",
-      content: `Template Name: ${templateName}\nTemplate Definition: ${templateDefinition}\nProject Name: ${projectName}\nProject Description: ${projectDescription}\nAdditional Context: ${addedContext}\n\nTranscript: ${transcript}`,
+      content: `Template Name: ${templateName}-----Template Definition: ${templateDefinition}-----Project Name: ${projectName}-----Project Description: ${projectDescription}-----Additional Context: ${addedContext}-----Transcript: ${transcript}`,
     },
   ];
 
@@ -250,7 +250,7 @@ const summarizeTranscript = async (
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: messages,
-    temperature: 1,
+    temperature: 0.85,
     max_tokens: 16383,
     top_p: 1,
     frequency_penalty: 0,

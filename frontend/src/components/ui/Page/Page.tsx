@@ -2,8 +2,9 @@ import { Box, Button } from "@mantine/core";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { LogoutButton } from "../../Auth/LogoutButton";
+
 import classes from "./Page.module.css";
-import { LogoutButton } from "../../Auth/LogoutButton/LogoutButton";
 
 interface PageProps {
   children: React.ReactNode;
@@ -19,8 +20,8 @@ export function Page({ children }: PageProps) {
         <Box className={classes.nav}>
           {/* Use onClick to navigate to the desired routes */}
           <Button
-            onClick={() => navigate("/")}
-            variant={location.pathname === "/" ? "gradient" : "outline"}
+            onClick={() => navigate("/meetings")}
+            variant={location.pathname === "/meetings" ? "gradient" : "outline"}
             gradient={{ from: "blue", to: "violet", deg: 202 }}
             size="sm"
             radius="md"

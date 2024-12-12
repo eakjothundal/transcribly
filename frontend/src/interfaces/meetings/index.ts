@@ -1,1 +1,1 @@
-export type { MeetingSummaryOptions } from "./meetings";
+export type { MeetingSummaryOptions, Meeting } from "./meetings";

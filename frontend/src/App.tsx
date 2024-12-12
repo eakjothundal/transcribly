@@ -14,11 +14,11 @@ import { supabase } from "./utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
 import { Login } from "./pages/Login";
-import { Home } from "./components/Home";
 
 import { useEffect, useState } from "react";
 import { Projects } from "./pages/Projects";
 import { Templates } from "./pages/Templates";
+import { Meetings } from "./pages/Meetings";
 
 function App() {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
@@ -49,7 +49,13 @@ function App() {
           {/* Public Route: Login */}
           <Route
             path="/login"
-            element={!session ? <Login /> : <Navigate to="/" replace />}
+            element={!session ? <Login /> : <Navigate to="/meetings" replace />}
+          />
+
+          {/* Protected Route: Meetings */}
+          <Route
+            path="/meetings"
+            element={session ? <Meetings /> : <Navigate to="/login" replace />}
           />
 
           {/* Protected Route: Projects */}
@@ -65,10 +71,7 @@ function App() {
           />
 
           {/* Protected Route: Home */}
-          <Route
-            path="/"
-            element={session ? <Home /> : <Navigate to="/login" replace />}
-          />
+          <Route path="/" element={<Navigate to="/meetings" replace />} />
         </Routes>
       </Router>
     </MantineProvider>

@@ -14,18 +14,31 @@ import { addMeeting } from "../../../utils/supabase/db/meetings";
 import { summarizeAndTranscribe } from "../../../utils/summarize";
 import { Meeting } from "../../../interfaces/meetings/meetings";
 
-export function NewMeeting() {
+export interface NewMeetingProps {
+  fetchMeetings?: () => void;
+}
+
+export function NewMeeting(props: NewMeetingProps) {
+  const { fetchMeetings } = props;
+
   const [addingMeeting, setAddingMeeting] = useState<boolean>(false);
 
   return (
     <Box>
-      <Button onClick={() => setAddingMeeting(true)} variant="gradiant">
+      <Button
+        onClick={() => setAddingMeeting(true)}
+        variant="gradient"
+        gradient={{ from: "blue", to: "violet", deg: 202 }}
+        size="md"
+        radius="md"
+      >
         New Meeting
       </Button>
 
       <NewMeeting.NewMeetingModal
         opened={addingMeeting}
         closeModal={() => setAddingMeeting(false)}
+        fetchMeetings={fetchMeetings}
       />
     </Box>
   );
@@ -34,12 +47,13 @@ export function NewMeeting() {
 export interface NewMeetingModalProps {
   opened: boolean;
   closeModal: () => void;
+  fetchMeetings?: () => void;
 }
 
 NewMeeting.NewMeetingModal = function AddProjectModal(
   props: NewMeetingModalProps
 ) {
-  const { opened, closeModal } = props;
+  const { opened, closeModal, fetchMeetings } = props;
 
   // MEETING FIELD STATES
   const [meetingName, setMeetingName] = useState<string | undefined>(undefined);
@@ -155,6 +169,7 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
           vibe: parsedSummary.vibe ? parsedSummary.vibe : null,
         });
 
+        fetchMeetings?.();
         closeModal();
       } else {
         console.error("Transcript or summary missing after summarization.");
@@ -172,6 +187,7 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
     meetingName,
     meetingDateAndTime,
     closeModal,
+    fetchMeetings,
   ]);
 
   return (

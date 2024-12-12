@@ -17,7 +17,13 @@ import { TemplateSettings } from "../../../interfaces/templates/templates";
 import { initialTemplateSettings } from "./defaults";
 import { MeetingSummaryOptions } from "../../../interfaces/meetings";
 
-export function AddTemplate() {
+export interface AddTemplateProps {
+  fetchTemplates?: () => void;
+}
+
+export function AddTemplate(props: AddTemplateProps) {
+  const { fetchTemplates } = props;
+
   const [addingTemplate, setAddingTemplate] = useState<boolean>(false);
 
   return (
@@ -35,6 +41,7 @@ export function AddTemplate() {
       <AddTemplate.AddTemplateModal
         opened={addingTemplate}
         closeModal={() => setAddingTemplate(false)}
+        fetchTemplates={fetchTemplates}
       />
     </Box>
   );
@@ -43,12 +50,13 @@ export function AddTemplate() {
 export interface AddTemplateModalProps {
   opened: boolean;
   closeModal: () => void;
+  fetchTemplates?: () => void;
 }
 
 AddTemplate.AddTemplateModal = function AddTemplateModal(
   props: AddTemplateModalProps
 ) {
-  const { opened, closeModal } = props;
+  const { opened, closeModal, fetchTemplates } = props;
 
   const [templateName, setTemplateName] = useState<string | undefined>(
     undefined
@@ -60,12 +68,24 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
     initialTemplateSettings
   );
 
-  const handleAddTemplate = useCallback(() => {
+  const handleAddTemplate = useCallback(async () => {
     if (templateName && templateDefinition) {
-      addTemplate(templateName, templateDefinition, templateSettings);
+      await addTemplate(templateName, templateDefinition, templateSettings);
+
+      setTemplateName(undefined);
+      setTemplateDescription(undefined);
+      setTemplateSettings(initialTemplateSettings);
+
+      fetchTemplates?.();
       closeModal();
     }
-  }, [templateName, templateDefinition, templateSettings, closeModal]);
+  }, [
+    templateName,
+    templateDefinition,
+    templateSettings,
+    closeModal,
+    fetchTemplates,
+  ]);
 
   return (
     <Modal
