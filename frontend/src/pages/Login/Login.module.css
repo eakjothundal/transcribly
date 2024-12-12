@@ -1,4 +1,114 @@
-.container {
-  width: 30%;
-  margin: 20vh auto;
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --accent-color: #3498db;
+  --background-color: #ecf0f1;
+  --text-color: #2c3e50;
+  --text-light: #7f8c8d;
+}
+
+.loginWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  padding: 2rem;
+}
+
+.loginContainer {
+  width: 100%;
+  max-width: 440px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.loginContainer:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 15px 25px rgba(0, 0, 0, 0.08);
+  transform: translateY(-5px);
+}
+
+.loginContent {
+  padding: 3rem 2.5rem;
+  position: relative;
+}
+
+.loginHeader {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.loginTitle {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.loginSubtitle {
+  color: var(--text-light);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.authInput {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: var(--text-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.authInput:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.authButton {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.authButton:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+}
+
+.loginFooter {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.footerText {
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .loginContent {
+    padding: 2rem 1.5rem;
+  }
+
+  .loginTitle {
+    font-size: 2rem;
+  }
 }
