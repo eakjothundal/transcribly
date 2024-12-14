@@ -3,12 +3,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/dropzone/styles.css";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { supabase } from "./utils/supabase";
 import { Session } from "@supabase/supabase-js";
@@ -45,38 +40,25 @@ function App() {
   return (
     <MantineProvider>
       <Router>
+        {/* Public Route: Login */}
         <Routes>
-          {/* Public Route: Login */}
-          <Route
-            path="/login"
-            element={!session ? <Login /> : <Navigate to="/meetings" replace />}
-          />
+          {/* Public Route */}
+          <Route path="/login" element={<Login />} />
 
-          {/* Protected Route: Meetings */}
-          <Route
-            path="/meetings"
-            element={session ? <Meetings /> : <Navigate to="/login" replace />}
-          />
-
-          {/* Protected Route: Projects */}
-          <Route
-            path="/projects"
-            element={session ? <Projects /> : <Navigate to="/login" replace />}
-          />
-
-          {/* Protected Route: Templates */}
-          <Route
-            path="/templates"
-            element={session ? <Templates /> : <Navigate to="/login" replace />}
-          />
-
-          {/* Redirect root `/` only if `location.pathname === '/'` */}
-          {location.pathname === "/" && (
-            <Route path="/" element={<Navigate to="/meetings" replace />} />
+          {/* Protected Routes */}
+          {session && (
+            <>
+              <Route path="/meetings" element={<Meetings />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/templates" element={<Templates />} />
+            </>
           )}
 
-          {/* Catch-all Route */}
-          <Route path="*" element={<Navigate to="/meetings" replace />} />
+          {/* Default Route */}
+          <Route path="/" element={session ? <Meetings /> : <Login />} />
+
+          {/* Catch-All for 404 */}
+          <Route path="*" element={<div>404: Page Not Found</div>} />
         </Routes>
       </Router>
     </MantineProvider>
