@@ -70,8 +70,13 @@ function App() {
             element={session ? <Templates /> : <Navigate to="/login" replace />}
           />
 
-          {/* Protected Route: Home */}
-          <Route path="/" element={<Navigate to="/meetings" replace />} />
+          {/* Redirect root `/` only if `location.pathname === '/'` */}
+          {location.pathname === "/" && (
+            <Route path="/" element={<Navigate to="/meetings" replace />} />
+          )}
+
+          {/* Catch-all Route */}
+          <Route path="*" element={<Navigate to="/meetings" replace />} />
         </Routes>
       </Router>
     </MantineProvider>
