@@ -43,7 +43,7 @@ function App() {
         {/* Public Route: Login */}
         <Routes>
           {/* Public Route */}
-          <Route path="/login" element={<Login />} />
+          {!session && <Route path="/login" element={<Login />} />}
 
           {/* Protected Routes */}
           {session && (
