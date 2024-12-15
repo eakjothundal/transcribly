@@ -22,6 +22,7 @@ export function Login() {
             }}
             providers={[]}
             showLinks={false}
+            redirectTo="/meetings"
           />
         </Box>
       </Box>
