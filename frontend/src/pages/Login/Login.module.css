@@ -102,6 +102,21 @@
   font-size: 0.85rem;
 }
 
+/* Toggle Login/Forgot Password views */
+.viewToggleText {
+  cursor: pointer;
+  color: #696969;
+  text-decoration: underline;
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  transition: color 0.1s ease;
+}
+
+.viewToggleText:hover {
+  color: #000000;
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .loginContent {
