@@ -206,7 +206,10 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
     <Modal
       title="Summarize Meeting"
       opened={opened}
-      onClose={closeModal}
+      onClose={() => {
+        clearFields();
+        closeModal();
+      }}
       size="xl"
       radius="md"
     >
