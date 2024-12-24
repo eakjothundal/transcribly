@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+
 import { getAllMeetings } from "../../utils/supabase/db/meetings";
 import { getProject } from "../../utils/supabase/db/projects";
+import { getAllProjects } from "../../utils/supabase/db/projects";
 import { getTemplate } from "../../utils/supabase/db/templates";
+import { getAllTemplates } from "../../utils/supabase/db/templates";
+
 import { Meeting } from "../../interfaces/meetings";
 
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
@@ -24,6 +28,8 @@ import { Template } from "../../interfaces/templates";
 
 export function Meetings() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const [meetingClicked, setMeetingClicked] = useState<
     Meeting["meeting_id"] | null
@@ -38,16 +44,37 @@ export function Meetings() {
     }
   };
 
+  // Fetch all meetings, templates, and projects on page load
   useEffect(() => {
+    const fetchTemplates = async () => {
+      const templatesData = await getAllTemplates();
+      setTemplates(templatesData || []);
+    };
+
+    const fetchProjects = async () => {
+      const projectsData = await getAllProjects();
+      setProjects(projectsData || []);
+    };
+
     fetchMeetings();
+    fetchTemplates();
+    fetchProjects();
   }, []);
 
+  const projectMap = new Map(
+    projects.map((project) => [project.project_id, project.project_name])
+  );
+
+  const templateMap = new Map(
+    templates.map((template) => [template.template_id, template.template_name])
+  );
+
   const columnDefs: ColDef<Meeting>[] = [
-    { field: "meeting_name", headerName: "Meeting Title", width: 350 },
+    { field: "meeting_name", headerName: "Meeting Title", width: 400 },
     {
       field: "meeting_date",
       headerName: "Meeting Date",
-      width: 150,
+      width: 175,
       valueFormatter: (params) => {
         if (!params.value) return "";
         const date = new Date(params.value);
@@ -57,11 +84,27 @@ export function Meetings() {
     {
       field: "meeting_date",
       headerName: "Meeting Time",
-      width: 150,
+      width: 175,
       valueFormatter: (params) => {
         if (!params.value) return "";
         const date = new Date(params.value);
         return format(date, "hh:mm a"); // Format as HH:MM AM/PM
+      },
+    },
+    {
+      field: "project_id",
+      headerName: "Project",
+      width: 300,
+      valueFormatter: (params) => {
+        return projectMap.get(params.value) || "None";
+      },
+    },
+    {
+      field: "template_id",
+      headerName: "Template",
+      width: 300,
+      valueFormatter: (params) => {
+        return templateMap.get(params.value) || "None";
       },
     },
   ];
@@ -71,13 +114,17 @@ export function Meetings() {
       <Box className={classes.container}>
         {/* NEW MEETING BUTTON */}
         <Box className={classes.newMeeting}>
-          <NewMeeting fetchMeetings={fetchMeetings} />
+          <NewMeeting
+            projects={projects}
+            templates={templates}
+            fetchMeetings={fetchMeetings}
+          />
         </Box>
 
         {/* TABLE */}
         <Box
           className="ag-theme-quartz" // applying the Data Grid theme
-          style={{ height: "60vh" }} // the Data Grid will fill the size of the parent container
+          style={{ height: "70vh" }} // the Data Grid will fill the size of the parent container
         >
           <AgGridReact
             columnDefs={columnDefs}
