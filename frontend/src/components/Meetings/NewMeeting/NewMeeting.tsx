@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 import classes from "./NewMeeting.module.css";
 import { Template } from "../../../interfaces/templates/templates";
 import { Project } from "../../../interfaces/projects";
-import { UploadArea } from "../../Home/UploadArea";
+import { UploadArea } from "../UploadArea/UploadArea";
 import { addMeeting } from "../../../utils/supabase/db/meetings";
 
 import { summarizeAndTranscribe } from "../../../utils/summarize";

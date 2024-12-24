@@ -1,7 +1,7 @@
 import { Box } from "@mantine/core";
 import Markdown from "react-markdown";
 
-import classes from "./Home.module.css";
+import classes from "./MarkdownViewer.module.css";
 
 interface MarkdownViewerProps {
   summary: string | null;

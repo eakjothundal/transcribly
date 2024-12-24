@@ -1,7 +1,3 @@
-.home {
-  margin-top: 3rem;
-}
-
 .dropzone {
   padding: 1rem;
 }
@@ -28,17 +24,6 @@
 
 .dropzoneContent {
   height: 6.25rem;
-}
-
-.markdownViewer {
-  width: 70%;
-  margin-top: 2.25rem;
-}
-
-.dropzoneDisabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 .uploadedFile h3,
