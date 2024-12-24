@@ -2,6 +2,30 @@
   margin-top: 3rem;
 }
 
+.dropzone {
+  padding: 1rem;
+}
+
+.dropzoneFileSelected {
+  border: 1px dashed #4caf50;
+  animation: enhancedPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes enhancedPulse {
+  0% {
+    border-color: #4caf50;
+    box-shadow: 0 0 12px #4caf50;
+  }
+  50% {
+    border-color: #66bb6a;
+    box-shadow: 0 0 20px #66bb6a;
+  }
+  100% {
+    border-color: #4caf50;
+    box-shadow: 0 0 12px #4caf50;
+  }
+}
+
 .dropzoneContent {
   height: 6.25rem;
 }
@@ -15,4 +39,14 @@
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.uploadedFile h3,
+.uploadedFile h5 {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.uploadedFile h5 {
+  color: #6c757d;
 }

@@ -108,7 +108,10 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
     setSelectedProjectId(undefined);
     setAddedContext("");
     setMeetingDateAndTime(new Date().toISOString());
-    setUploadedFile(null);
+
+    setTimeout(() => {
+      setUploadedFile(null);
+    }, 200);
   }, []);
 
   // Upload File
@@ -180,8 +183,8 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
         });
 
         fetchMeetings?.();
-        clearFields();
         closeModal();
+        clearFields();
       } else {
         console.error("Transcript or summary missing after summarization.");
       }
@@ -207,8 +210,8 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
       title="Summarize Meeting"
       opened={opened}
       onClose={() => {
-        clearFields();
         closeModal();
+        clearFields();
       }}
       size="xl"
       radius="md"
@@ -277,7 +280,10 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
 
         {/* UPLOAD */}
         <Box className={classes.uploadAudioArea}>
-          <UploadArea setUploadedFile={setUploadedFile} />
+          <UploadArea
+            uploadedFile={uploadedFile}
+            setUploadedFile={setUploadedFile}
+          />
         </Box>
 
         {/* ADD PROJECT BUTTON */}

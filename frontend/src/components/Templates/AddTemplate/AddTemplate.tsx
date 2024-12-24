@@ -83,8 +83,8 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
       setTemplateSettings(initialTemplateSettings);
 
       fetchTemplates?.();
-      clearFields();
       closeModal();
+      clearFields();
     }
   }, [
     clearFields,
@@ -100,8 +100,8 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
       title="Add a New Template"
       opened={opened}
       onClose={() => {
-        clearFields();
         closeModal();
+        clearFields();
       }}
       size="lg"
       radius="md"

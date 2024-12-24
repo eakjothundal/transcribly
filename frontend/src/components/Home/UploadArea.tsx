@@ -4,11 +4,12 @@ import { Dropzone } from "@mantine/dropzone";
 import classes from "./Home.module.css";
 
 interface UploadAreaProps {
+  uploadedFile: File | null;
   setUploadedFile: (file: File) => void;
 }
 
 export function UploadArea(props: UploadAreaProps) {
-  const { setUploadedFile } = props;
+  const { uploadedFile, setUploadedFile } = props;
 
   return (
     <Box>
@@ -17,15 +18,37 @@ export function UploadArea(props: UploadAreaProps) {
         onReject={(files) => console.log("rejected files", files)}
         maxFiles={1}
         maxSize={50 * 1024 ** 2}
+        className={`${classes.dropzone} ${
+          uploadedFile ? classes.dropzoneFileSelected : ""
+        }`}
+        radius="md"
       >
         <Flex
           justify="center"
           align="center"
-          className={classes.dropzoneContent}
+          className={`${classes.dropzoneContent}`}
         >
-          <Text>
-            <h3>Drop an audio file</h3>
-          </Text>
+          {uploadedFile ? (
+            <Text>
+              <Flex
+                align="center"
+                direction="column"
+                justify="center"
+                gap="md"
+                className={classes.uploadedFile}
+              >
+                <Flex align="center" direction="column">
+                  <h3>{`🎉 File selected:`}</h3>
+                  <h3>{uploadedFile.name}</h3>
+                </Flex>
+                <h5>Drop another file to replace this one.</h5>
+              </Flex>
+            </Text>
+          ) : (
+            <Text>
+              <h3>🎤 Drop your meeting or voice recording here!</h3>
+            </Text>
+          )}
         </Flex>
       </Dropzone>
     </Box>
