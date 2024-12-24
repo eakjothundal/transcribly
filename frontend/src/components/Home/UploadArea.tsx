@@ -38,15 +38,15 @@ export function UploadArea(props: UploadAreaProps) {
                 className={classes.uploadedFile}
               >
                 <Flex align="center" direction="column">
-                  <h3>{`File selected:`}</h3>
+                  <h3>{`🎉 File selected:`}</h3>
                   <h3>{uploadedFile.name}</h3>
                 </Flex>
-                <h5>Drop another file to replace it.</h5>
+                <h5>Drop another file to replace this one.</h5>
               </Flex>
             </Text>
           ) : (
             <Text>
-              <h3>Drop an audio file</h3>
+              <h3>🎤 Drop your meeting or voice recording here!</h3>
             </Text>
           )}
         </Flex>

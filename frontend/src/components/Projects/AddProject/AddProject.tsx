@@ -64,8 +64,8 @@ AddProject.AddProjectModal = function AddProjectModal(
         fetchProjects();
       }
 
-      clearFields();
       closeModal();
+      clearFields();
     }
   }, [projectName, projectDescription, closeModal, fetchProjects, clearFields]);
 
@@ -74,8 +74,8 @@ AddProject.AddProjectModal = function AddProjectModal(
       title="Add a New Project"
       opened={opened}
       onClose={() => {
-        clearFields();
         closeModal();
+        clearFields();
       }}
       size="lg"
       radius="md"
