@@ -124,7 +124,7 @@ export function Meetings() {
         {/* TABLE */}
         <Box
           className="ag-theme-quartz" // applying the Data Grid theme
-          style={{ height: "60vh" }} // the Data Grid will fill the size of the parent container
+          style={{ height: "70vh" }} // the Data Grid will fill the size of the parent container
         >
           <AgGridReact
             columnDefs={columnDefs}
