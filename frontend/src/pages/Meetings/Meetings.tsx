@@ -70,11 +70,11 @@ export function Meetings() {
   );
 
   const columnDefs: ColDef<Meeting>[] = [
-    { field: "meeting_name", headerName: "Meeting Title", width: 350 },
+    { field: "meeting_name", headerName: "Meeting Title", width: 400 },
     {
       field: "meeting_date",
       headerName: "Meeting Date",
-      width: 150,
+      width: 175,
       valueFormatter: (params) => {
         if (!params.value) return "";
         const date = new Date(params.value);
@@ -84,7 +84,7 @@ export function Meetings() {
     {
       field: "meeting_date",
       headerName: "Meeting Time",
-      width: 150,
+      width: 175,
       valueFormatter: (params) => {
         if (!params.value) return "";
         const date = new Date(params.value);
@@ -94,7 +94,7 @@ export function Meetings() {
     {
       field: "project_id",
       headerName: "Project",
-      width: 200,
+      width: 300,
       valueFormatter: (params) => {
         return projectMap.get(params.value) || "None";
       },
@@ -102,7 +102,7 @@ export function Meetings() {
     {
       field: "template_id",
       headerName: "Template",
-      width: 200,
+      width: 300,
       valueFormatter: (params) => {
         return templateMap.get(params.value) || "None";
       },
