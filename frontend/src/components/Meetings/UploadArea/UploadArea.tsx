@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 
-import classes from "./Home.module.css";
+import classes from "./UploadArea.module.css";
 
 interface UploadAreaProps {
   uploadedFile: File | null;
