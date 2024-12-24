@@ -277,7 +277,10 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
 
         {/* UPLOAD */}
         <Box className={classes.uploadAudioArea}>
-          <UploadArea setUploadedFile={setUploadedFile} />
+          <UploadArea
+            uploadedFile={uploadedFile}
+            setUploadedFile={setUploadedFile}
+          />
         </Box>
 
         {/* ADD PROJECT BUTTON */}
