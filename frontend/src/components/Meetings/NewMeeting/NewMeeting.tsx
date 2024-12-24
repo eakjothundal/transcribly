@@ -1,9 +1,6 @@
 import { Box, Button, Modal, Select, Textarea, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
-import { getAllTemplates } from "../../../utils/supabase/db/templates";
-import { getAllProjects } from "../../../utils/supabase/db/projects";
+import { useCallback, useMemo, useState } from "react";
 
 import classes from "./NewMeeting.module.css";
 import { Template } from "../../../interfaces/templates/templates";
@@ -15,11 +12,13 @@ import { summarizeAndTranscribe } from "../../../utils/summarize";
 import { Meeting } from "../../../interfaces/meetings/meetings";
 
 export interface NewMeetingProps {
+  projects: Project[];
+  templates: Template[];
   fetchMeetings?: () => void;
 }
 
 export function NewMeeting(props: NewMeetingProps) {
-  const { fetchMeetings } = props;
+  const { projects, templates, fetchMeetings } = props;
 
   const [addingMeeting, setAddingMeeting] = useState<boolean>(false);
 
@@ -39,21 +38,22 @@ export function NewMeeting(props: NewMeetingProps) {
         opened={addingMeeting}
         closeModal={() => setAddingMeeting(false)}
         fetchMeetings={fetchMeetings}
+        projects={projects}
+        templates={templates}
       />
     </Box>
   );
 }
 
-export interface NewMeetingModalProps {
+export interface NewMeetingModalProps extends NewMeetingProps {
   opened: boolean;
   closeModal: () => void;
-  fetchMeetings?: () => void;
 }
 
 NewMeeting.NewMeetingModal = function NewMeetingModal(
   props: NewMeetingModalProps
 ) {
-  const { opened, closeModal, fetchMeetings } = props;
+  const { opened, closeModal, projects, templates, fetchMeetings } = props;
 
   // MEETING FIELD STATES
   const [meetingName, setMeetingName] = useState<string | undefined>(undefined);
@@ -70,27 +70,7 @@ NewMeeting.NewMeetingModal = function NewMeetingModal(
   );
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
-  // Fetch states
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-
   const [loading, setLoading] = useState<boolean>(false);
-
-  // Fetch all templates
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      const templatesData = await getAllTemplates();
-      setTemplates(templatesData || []);
-    };
-
-    const fetchProjects = async () => {
-      const projectsData = await getAllProjects();
-      setProjects(projectsData || []);
-    };
-
-    fetchTemplates();
-    fetchProjects();
-  }, []);
 
   const disableSave = useMemo(
     () =>
