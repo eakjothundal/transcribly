@@ -68,6 +68,12 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
     initialTemplateSettings
   );
 
+  const clearFields = useCallback(() => {
+    setTemplateName(undefined);
+    setTemplateDescription(undefined);
+    setTemplateSettings(initialTemplateSettings);
+  }, []);
+
   const handleAddTemplate = useCallback(async () => {
     if (templateName && templateDefinition) {
       await addTemplate(templateName, templateDefinition, templateSettings);
@@ -77,21 +83,26 @@ AddTemplate.AddTemplateModal = function AddTemplateModal(
       setTemplateSettings(initialTemplateSettings);
 
       fetchTemplates?.();
+      clearFields();
       closeModal();
     }
   }, [
-    templateName,
-    templateDefinition,
-    templateSettings,
+    clearFields,
     closeModal,
     fetchTemplates,
+    templateDefinition,
+    templateName,
+    templateSettings,
   ]);
 
   return (
     <Modal
       title="Add a New Template"
       opened={opened}
-      onClose={closeModal}
+      onClose={() => {
+        clearFields();
+        closeModal();
+      }}
       size="lg"
       radius="md"
     >

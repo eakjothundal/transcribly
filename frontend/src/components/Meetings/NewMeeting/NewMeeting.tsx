@@ -50,7 +50,7 @@ export interface NewMeetingModalProps {
   fetchMeetings?: () => void;
 }
 
-NewMeeting.NewMeetingModal = function AddProjectModal(
+NewMeeting.NewMeetingModal = function NewMeetingModal(
   props: NewMeetingModalProps
 ) {
   const { opened, closeModal, fetchMeetings } = props;
@@ -100,6 +100,16 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
       !uploadedFile,
     [meetingName, selectedTemplateId, selectedProjectId, uploadedFile]
   );
+
+  // Function to clear all fields
+  const clearFields = useCallback(() => {
+    setMeetingName("");
+    setSelectedTemplateId(undefined);
+    setSelectedProjectId(undefined);
+    setAddedContext("");
+    setMeetingDateAndTime(new Date().toISOString());
+    setUploadedFile(null);
+  }, []);
 
   // Upload File
   const summarize = useCallback(async () => {
@@ -170,6 +180,7 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
         });
 
         fetchMeetings?.();
+        clearFields();
         closeModal();
       } else {
         console.error("Transcript or summary missing after summarization.");
@@ -180,21 +191,25 @@ NewMeeting.NewMeetingModal = function AddProjectModal(
       setLoading(false);
     }
   }, [
-    uploadedFile,
-    selectedTemplateId,
-    selectedProjectId,
     addedContext,
-    meetingName,
-    meetingDateAndTime,
+    clearFields,
     closeModal,
     fetchMeetings,
+    meetingDateAndTime,
+    meetingName,
+    selectedProjectId,
+    selectedTemplateId,
+    uploadedFile,
   ]);
 
   return (
     <Modal
       title="Summarize Meeting"
       opened={opened}
-      onClose={closeModal}
+      onClose={() => {
+        clearFields();
+        closeModal();
+      }}
       size="xl"
       radius="md"
     >

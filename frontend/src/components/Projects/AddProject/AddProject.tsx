@@ -51,6 +51,11 @@ AddProject.AddProjectModal = function AddProjectModal(
     string | undefined
   >(undefined);
 
+  const clearFields = useCallback(() => {
+    setProjectName(undefined);
+    setProjectDescription(undefined);
+  }, []);
+
   const handleAddProject = useCallback(async () => {
     if (projectName && projectDescription) {
       await addProject(projectName, projectDescription);
@@ -59,15 +64,19 @@ AddProject.AddProjectModal = function AddProjectModal(
         fetchProjects();
       }
 
+      clearFields();
       closeModal();
     }
-  }, [projectName, projectDescription, closeModal, fetchProjects]);
+  }, [projectName, projectDescription, closeModal, fetchProjects, clearFields]);
 
   return (
     <Modal
       title="Add a New Project"
       opened={opened}
-      onClose={closeModal}
+      onClose={() => {
+        clearFields();
+        closeModal();
+      }}
       size="lg"
       radius="md"
     >
