@@ -9,6 +9,7 @@ interface UploadAreaProps {
 }
 
 // This component is responsible for rendering the dropzone area where the user can upload a file.
+// It uses the Dropzone component from the Mantine library to handle the file upload functionality.
 export function UploadArea(props: UploadAreaProps) {
   const { uploadedFile, setUploadedFile } = props;
 
