@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16' # Adjust the Node.js version to your project requirements
+        node-version: '18' # Update Node.js to a version >= 18
 
     - name: Navigate to frontend and install dependencies
       working-directory: ./frontend
