@@ -8,6 +8,7 @@ interface UploadAreaProps {
   setUploadedFile: (file: File) => void;
 }
 
+// This component is responsible for rendering the dropzone area where the user can upload a file.
 export function UploadArea(props: UploadAreaProps) {
   const { uploadedFile, setUploadedFile } = props;
 
