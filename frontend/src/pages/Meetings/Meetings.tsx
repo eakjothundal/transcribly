@@ -111,6 +111,7 @@ export function Meetings() {
 
   return (
     <Page>
+      <h1>Meetings</h1>
       <Box className={classes.container}>
         {/* NEW MEETING BUTTON */}
         <Box className={classes.newMeeting}>
